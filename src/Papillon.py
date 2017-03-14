@@ -59,15 +59,17 @@ class Papillon:
             
             
     def ajouterPapillonHrzt(self, p3):
-        """Ajoute un papillon vertical à partir d'un voisin
+        """Ajoute un papillon à droite à partir d'un point nm voisin
             on vérifie que le papillon aura un géométrie 'normale' """        
-        
+        print(p3.x)
+        print(p3.y)
         lvert = self.ne.distance(self.se)
         lhrzt = self.ne.distance(p3)
         angle = acos((self.se.distance(p3)**2 - lhrzt**2 - lvert**2) / (-2*lhrzt*lvert))     
-        
+
         #assert(lhrzt <= lvert/2 /cos(angle))
-        
+        print(self.se.x)
+        print(self.se.y)
         voisin = Papillon(self.se, lhrzt, lvert, angle)
         voisin.no.libre = False
         voisin.so.libre = False
@@ -75,8 +77,11 @@ class Papillon:
         return voisin
         
         
-    def ajouterPapillonVert(self):
-        #Ajout d'un papillon vertical :
+    def ajouterPapillonVertSimple(self, voisH):
+        # Ajout d'un papillon vertical :
+        #assert(voisH.se == self.nm) 
+        # Cas du voisin vertical le plus libre 
+        # seuls trois points sont fixés
         lvert = self.nm.distance(self.no)
         lhrzt = self.so.distance(self.sm)
         angle = abs(acos((self.sm.distance(self.no)**2 - lhrzt**2 - lvert**2) / (-2*lhrzt*lvert)))     
@@ -84,8 +89,26 @@ class Papillon:
         voisin = Papillon(self.nm, lhrzt, lvert, angle)
         return voisin
         
-
-            
+        
+        # on construit le voisin le moins libre : 1 seul point ne à choisir
+        # on le construit par symétrie avec la partie collée au papillon dessous
+    def ajouterPapillonVert(self, voisH, se):
+        pap = Papillon(Point(0,0,0), 0, 0, 0)
+        pap.so = voisH.se
+        pap.no = voisH.ne
+        pap.nm = se
+        dy = self.no.y - self.nm.y  
+        pap.ne = Point(self.nm.x, se.y+dy, 0)
+        pap.se = self.nm
+        pap.sm = self.no
+        #lh = self.no.distance(nm)
+        return pap
+                        
+    def ajouterPapillonVertDernier(self, voisH):
+        dy = voisH.se.y - self.ne.y 
+        return self.ajouterPapillonVert(voisH, Point(self.no.x, voisH.ne.y + dy, 0)) 
+        
+        
     def tracer(self):
         self.no.afficherPoint()    
         self.nm.afficherPoint()    
