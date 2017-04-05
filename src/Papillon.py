@@ -61,15 +61,15 @@ class Papillon:
     def ajouterPapillonHrzt(self, p3):
         """Ajoute un papillon à droite à partir d'un point nm voisin
             on vérifie que le papillon aura un géométrie 'normale' """        
-        print(p3.x)
-        print(p3.y)
+        #print(p3.x)
+        #print(p3.y)
         lvert = self.ne.distance(self.se)
         lhrzt = self.ne.distance(p3)
         angle = acos((self.se.distance(p3)**2 - lhrzt**2 - lvert**2) / (-2*lhrzt*lvert))     
 
         #assert(lhrzt <= lvert/2 /cos(angle))
-        print(self.se.x)
-        print(self.se.y)
+       # print(self.se.x)
+        #print(self.se.y)
         voisin = Papillon(self.se, lhrzt, lvert, angle)
         voisin.no.libre = False
         voisin.so.libre = False
