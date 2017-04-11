@@ -26,7 +26,7 @@ ax = fig.gca(projection='3d')
 
 
 
-
+#prendre en compte et tracer point et voisins
 def placerPointsSurf(listePoints, Surface):
    for papillon in listePoints:
         current = papillon.no
