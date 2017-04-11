@@ -9,6 +9,7 @@ import numpy as np
 from Point import *
 from Papillon import *
 from Maille import *
+from interpolation import *
 
 
 class ListePoints: 
@@ -59,7 +60,10 @@ class ListePoints:
             for j in range(0, m):
                 x = self.get(i,j).x
                 y = self.ge(i,j).y
-                self.pts[i+j*(self.n)] = Point(x, y, 1) # Fonction lambda à insérer ici à la place du 1
+                self.pts[i+j*(self.n)] = Point(x, y, surface(x,y))
+    
+    def estBord(self, p):
+        return (p.x == 0 or p.y == 0 or p.x == n or p.y == m)
               
 
     """ Initialisation à partir d'une maille

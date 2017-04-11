@@ -10,6 +10,7 @@ from Point import *
 from Papillon import *
 from Maille import *
 from ListePoints import *
+from interpolation import *
 
 angle = pi/2.5
 # On génère un nombre fixe de papillons 
@@ -83,9 +84,28 @@ plt.show()
 ######## Sortie : 
 #tracer(M3Dtemp) 	# on peut aussi afficher le maillage 2D : M2Dfinal
 
-
 liste_pts = ListePoints(maille)
 liste_pts.afficher()
 
 plt.axis([0, 8, 0, 4])
-plt.show()    
+plt.show()
+
+
+######################################################################################################################
+
+#mailleCour = ListePoints(Maille(3,2))
+## S0 fonction définie dans interpolation
+## SN fonction définie dans interpolation
+#N = 10
+#for t in range(1/N, 1, 1/N):
+#    St = interpolation(S0, SN, t)
+#    mailleCour.projection(St)
+#    stable = False
+#    while (not stable):
+#        for p in mailleCour:
+#            if (not mailleCour.estBord(p)):
+#                mailleSuiv[p.x + p.y*(mailleCour.n)] = optimisation(p, mailleCour.getVoisin(p), mailleCour)
+#            if (energieAssezFaible):
+#                stable = True
+#            mailleCour = mailleSuiv
+#mailleCour.afficher
