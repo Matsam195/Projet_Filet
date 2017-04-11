@@ -14,7 +14,7 @@ class Point:
         """Par défaut le point3D est placé à l'origine"""
         self.x = 0
         self.y = 0
-        self.z = 0    
+        self.z = 0
         self.libre = True
         
         
