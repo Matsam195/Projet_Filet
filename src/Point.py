@@ -41,7 +41,9 @@ class Point:
 
     
     def afficherPoint(self) : 
-        plt.plot(self.x, self.y, 'ro')
+        print(self.x, self.y)
+        if not(self.x == -1 and self.y == -1):
+            plt.plot(self.x, self.y, 'ro')
         
     def afficherSegment(self, p2) : 
         plt.plot( [self.x, p2.x], [self.y, p2.y] )
