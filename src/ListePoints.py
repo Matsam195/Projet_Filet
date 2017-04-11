@@ -53,7 +53,14 @@ class ListePoints:
 #        if (i == 0 and j == self.m) :
 #            if (self.mailleM % 2 == 0):
 #                self.pts[i + j*(self.n)] = Point(-1,-1)
-                
+              
+    def projection(self, surface):
+        for i in range(0, n):
+            for j in range(0, m):
+                x = self.get(i,j).x
+                y = self.ge(i,j).y
+                self.pts[i+j*(self.n)] = Point(x, y, 1) # Fonction lambda à insérer ici à la place du 1
+              
 
     """ Initialisation à partir d'une maille
         n et m sont calculés à partir de cette maille pour plus de clarté    
