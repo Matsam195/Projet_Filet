@@ -20,10 +20,13 @@ class ListePoints:
         print(self.m)        
         # si le nb de papillons verticaux est pair, 
         # alors il existe un point fantome 
-        for j in range(self.m):
-            for i in range(self.n):
-                print("coord : ", i,j) 
-                self.get(i,j).afficherPoint()                   
+        for j in range(0, self.m):
+            for i in range(0, self.n):
+                self.get(i,j).afficherPoint()   
+                if (i > 0 and i < self.n-1 and j > 0 and j < self.m-1) :
+                    l = self.getVoisins(i,j)    
+                    for voisin in range(0, 3) :
+                        l[voisin].afficherSegment(self.get(i,j))
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))
@@ -36,14 +39,20 @@ class ListePoints:
                 return self.pts[0]
         return self.pts[i + j*(self.n)]
         
-    def getVoisin(self, i, j) :
-        assert ((i >= 0) and (j >= 0))
-        assert ((i < self.n) and (j < self.m))
+    # on ne peut pas demander le voisin d'un bord pour le moment
+    # évite la gestion des fantômes aussi
+    # les voisins sont donnés par ordre de j croissant
+    def getVoisins(self, i, j) :
+        assert ((i > 0) and (j > 0))
+        assert ((i < self.n-1) and (j < self.m-1))
         listeVoisins = []
-            
-        # Gestion renvoi des voisins
-        listeVoisins.append()
-        
+        listeVoisins.append(self.get(i, j-1))
+        if (i % 2) == (j % 2): # flèche vers le bas 
+            listeVoisins.append(self.get(i+1,j))
+        else :
+            listeVoisins.append(self.get(i-1, j))
+        listeVoisins.append(self.get(i, j+1))
+        return listeVoisins
 #    def setL(self, i, j, val):
 #        assert(i>=0 and j>=0)        
 #        self.pts[i + j*(self.n)] = val
@@ -180,6 +189,6 @@ class ListePoints:
         if not pair:
             liste.append(fantome)
             
-        print(nb_pts)
+        #print(nb_pts)
             
         self.pts = liste

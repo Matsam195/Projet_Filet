@@ -60,8 +60,8 @@ while (j < maille.m):
 plt.axis([0, 8, 0, 4])
 plt.show() 
 
-
 ## transformation des mailles de papillons en liste de points
+
 #
 ######## Entrées : 
 #N = 10 			# Nb itérations
