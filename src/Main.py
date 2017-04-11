@@ -59,31 +59,7 @@ while (j < maille.m):
 plt.axis([0, 8, 0, 4])
 plt.show() 
 
-
 ## transformation des mailles de papillons en liste de points
-#
-######## Entrées : 
-#N = 10 			# Nb itérations
-#SN = ? 			# surface à approcher
-#
-######## Variables :
-## A définir à partir de l’initialisation déjà faite :
-#M2Dfinal = 		# Maille temporaire 2D, paramétrisation u v
-#
-#for t in range(1/N,1/N,1):  
-#    # interpolation de la surface pour trouver la nouvelle : S = (1-t) S0 + t SN
-#    Scour = interpolation(S0, SN, t) 	# surface idéale interpolée au temps t
-#    projection(mailleCour, St) 
-#    while !stable: 
-#        for each point2D sauf les bords:
-#            # optimisation locale des forces pour savoir où placer le point2D  
-#            # résultat dans une nouvelle maille
-#            optimisation(point2D, voisins, mailleCour) 
-#        
-######## Sortie : 
-#tracer(M3Dtemp) 	# on peut aussi afficher le maillage 2D : M2Dfinal
-
-
 liste_pts = ListePoints(maille)
 liste_pts.afficher()
 
