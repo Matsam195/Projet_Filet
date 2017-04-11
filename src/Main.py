@@ -9,16 +9,12 @@ from math import *
 from Point import *
 from Papillon import *
 from Maille import *
-
-# TODO :  
-# faire le tracé du papillon 7
-# utiliser la maille pour remplacer premier et p 
-# éventuellement mettre un booleen pair ou  impair à la place des if
+from ListePoints import *
 
 angle = pi/2.5
+# On génère un nombre fixe de papillons 
+maille = Maille(3,2)
 
-maille = Maille(4,5)
-maille.afficher()
 # Création de l'origine - 1er papillon en (0,0)
 origine = Point(0, 0, 0)
 premierPapillon = Papillon(origine, 1, 1, angle)
@@ -45,7 +41,7 @@ while (j < maille.m):
     courant.tracer()
     maille.placerPapillon(courant)
     i = 1
-    # 
+    # Papillons à l'intérieur
     while (i < maille.n):
         if (i%2) != 0:
             suivant = courant.ajouterPapillonVertSimple(maille.get(i, j-1)) 
@@ -62,3 +58,34 @@ while (j < maille.m):
     
 plt.axis([0, 8, 0, 4])
 plt.show() 
+
+
+## transformation des mailles de papillons en liste de points
+#
+######## Entrées : 
+#N = 10 			# Nb itérations
+#SN = ? 			# surface à approcher
+#
+######## Variables :
+## A définir à partir de l’initialisation déjà faite :
+#M2Dfinal = 		# Maille temporaire 2D, paramétrisation u v
+#
+#for t in range(1/N,1/N,1):  
+#    # interpolation de la surface pour trouver la nouvelle : S = (1-t) S0 + t SN
+#    Scour = interpolation(S0, SN, t) 	# surface idéale interpolée au temps t
+#    projection(mailleCour, St) 
+#    while !stable: 
+#        for each point2D sauf les bords:
+#            # optimisation locale des forces pour savoir où placer le point2D  
+#            # résultat dans une nouvelle maille
+#            optimisation(point2D, voisins, mailleCour) 
+#        
+######## Sortie : 
+#tracer(M3Dtemp) 	# on peut aussi afficher le maillage 2D : M2Dfinal
+
+
+liste_pts = ListePoints(maille)
+liste_pts.afficher()
+
+plt.axis([0, 8, 0, 4])
+plt.show()    
