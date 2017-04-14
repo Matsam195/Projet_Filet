@@ -20,7 +20,7 @@ maille = Maille(3,2)
 origine = Point(0, 0, 0)
 premierPapillon = Papillon(origine, 1, 1, angle)
 maille.placerPapillon(premierPapillon)
-premierPapillon.tracer()
+#premierPapillon.tracer()
 courant = premierPapillon
 # Création de la première colonne :
 i = 0
@@ -30,7 +30,7 @@ while i != maille.n -1:
     else :
         suivant = courant.ajouterPapillonInitColonne(courant.no, courant.nm, pi/2.5)
     maille.placerPapillon(suivant)
-    suivant.tracer()
+    #suivant.tracer()
     courant = suivant    
     i = i + 1
     
@@ -39,7 +39,7 @@ j = 1 # on a déjà tracé la première colonne donc on commence à 1
 while (j < maille.m):
     # Papillon "du bas" - sur le bord
     courant = maille.get(0, j-1).ajouterPapillonHrzt(maille.get(1, j-1).se)
-    courant.tracer()
+#    courant.tracer()
     maille.placerPapillon(courant)
     i = 1
     # Papillons à l'intérieur
@@ -51,14 +51,14 @@ while (j < maille.m):
                 suivant = courant.ajouterPapillonVertDernier(maille.get(i, j-1))
             else:
                 suivant = courant.ajouterPapillonVert(maille.get(i, j-1), maille.get(i+1,j-1).se)
-        suivant.tracer()
+#        suivant.tracer()
         maille.placerPapillon(suivant)
         courant = suivant      
         i = i + 1
     j = j + 1
     
 plt.axis([0, 8, 0, 4])
-plt.show() 
+#plt.show() 
 
 ## transformation des mailles de papillons en liste de points
 
@@ -85,9 +85,9 @@ plt.show()
 #tracer(M3Dtemp) 	# on peut aussi afficher le maillage 2D : M2Dfinal
 
 liste_pts = ListePoints(maille)
-liste_pts.afficher()
+#liste_pts.afficher()
 plt.axis([0, 8, 0, 4])
-plt.show()
+#plt.show()
 
 
 ######################################################################################################################
@@ -108,4 +108,5 @@ for k in range(1, N+1):
 #            if (energieAssezFaible):
 #                stable = True
 #            mailleCour = mailleSuiv
-mailleCour.afficher
+
+    mailleCour.afficher()

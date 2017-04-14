@@ -11,22 +11,43 @@ from Papillon import *
 from Maille import *
 from interpolation import *
 
+#affichage 3d
+import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
+
 
 class ListePoints: 
 
     def afficher(self):
+        #mpl.rcParams['legend.fontsize'] = 10
+
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        
+        
         print("taille : ")
         print(self.n)
         print(self.m)        
         # si le nb de papillons verticaux est pair, 
         # alors il existe un point fantome 
-        for j in range(0, self.m):
-            for i in range(0, self.n):
-                self.get(i,j).afficherPoint()   
-                if (i > 0 and i < self.n-1 and j > 0 and j < self.m-1) :
-                    l = self.getVoisins(i,j)    
-                    for voisin in range(0, 3) :
-                        l[voisin].afficherSegment(self.get(i,j))
+#        for j in range(0, self.m):
+#            for i in range(0, self.n):
+#                self.get(i,j).afficherPoint()   
+#                if (i > 0 and i < self.n-1 and j > 0 and j < self.m-1) :
+#                    l = self.getVoisins(i,j)    
+#                    for voisin in range(0, 3) :
+#                        l[voisin].afficherSegment(self.get(i,j))
+        for i in range(1, self.n-1):
+            for j in range(1, self.m-1):
+                P = self.get(i,j)
+                if (not self.estBord(P)):
+                    for v in self.getVoisins(i, j):
+                        print("dans afficher", P.z)
+                        x = [P.x, v.x]
+                        y = [P.y, v.y]
+                        z = [P.z, v.z]
+                        ax.plot(x,y,z)       
+        plt.show()
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))
@@ -69,11 +90,14 @@ class ListePoints:
             for j in range(0, self.m):
                 x = self.get(i,j).x
                 y = self.get(i,j).y
-                self.pts[i+j*(self.n)] = surface(x,y)
+                self.pts[i+j*(self.n)] = surface(x,y) 
     
     def estBord(self, p):
-        return (p.x == 0 or p.y == 0 or p.x == n or p.y == m)
-              
+        return (p.x == 0 or p.y == 0 or p.x == self.n or p.y == self.m)
+        
+        
+    
+        
 
     """ Initialisation à partir d'une maille
         n et m sont calculés à partir de cette maille pour plus de clarté    
