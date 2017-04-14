@@ -65,11 +65,11 @@ class ListePoints:
 #                self.pts[i + j*(self.n)] = Point(-1,-1)
               
     def projection(self, surface):
-        for i in range(0, n):
-            for j in range(0, m):
+        for i in range(0, self.n):
+            for j in range(0, self.m):
                 x = self.get(i,j).x
-                y = self.ge(i,j).y
-                self.pts[i+j*(self.n)] = Point(x, y, surface(x,y))
+                y = self.get(i,j).y
+                self.pts[i+j*(self.n)] = surface(x,y)
     
     def estBord(self, p):
         return (p.x == 0 or p.y == 0 or p.x == n or p.y == m)
@@ -79,9 +79,9 @@ class ListePoints:
         n et m sont calculés à partir de cette maille pour plus de clarté    
     """ 
     def __init__(self, maille):
-        self.n = maille.n + 1 
+        self.n = maille.n + 1 # n le nombre de points en hauteur
         self.mailleN = maille.n
-        self.m = maille.m * 2 + 2
+        self.m = maille.m * 2 + 2 # m le nombre de points en largeur 
         self.mailleM = maille.m
         
         # initialisation de la liste de points à partir de la maille :
@@ -92,6 +92,7 @@ class ListePoints:
         
         # on trace les deux premières colonnes :
         for i in range(0,maille.n,2):
+            print(i)
             liste.append(maille.get(i,0).so)
             liste.append(maille.get(i,0).no)
             nb_pts = nb_pts + 2        

@@ -21,7 +21,7 @@ origine = Point(0, 0, 0)
 premierPapillon = Papillon(origine, 1, 1, angle)
 maille.placerPapillon(premierPapillon)
 premierPapillon.tracer()
-courant = premierPapillon 
+courant = premierPapillon
 # Création de la première colonne :
 i = 0
 while i != maille.n -1:
@@ -86,26 +86,26 @@ plt.show()
 
 liste_pts = ListePoints(maille)
 liste_pts.afficher()
-
 plt.axis([0, 8, 0, 4])
 plt.show()
 
 
 ######################################################################################################################
 
-#mailleCour = ListePoints(Maille(3,2))
-## S0 fonction définie dans interpolation
-## SN fonction définie dans interpolation
-#N = 10
-#for t in range(1/N, 1, 1/N):
-#    St = interpolation(S0, SN, t)
-#    mailleCour.projection(St)
-#    stable = False
+mailleCour = liste_pts
+# S0 fonction définie dans interpolation
+# SN fonction définie dans interpolation
+N = 10
+for k in range(1, N+1):
+    t = k/N
+    St = interpolation(S0, SN, t)
+    mailleCour.projection(St)
+    stable = False
 #    while (not stable):
-#        for p in mailleCour:
+#        for p in mailleCour.pts:
 #            if (not mailleCour.estBord(p)):
 #                mailleSuiv[p.x + p.y*(mailleCour.n)] = optimisation(p, mailleCour.getVoisin(p), mailleCour)
 #            if (energieAssezFaible):
 #                stable = True
 #            mailleCour = mailleSuiv
-#mailleCour.afficher
+mailleCour.afficher

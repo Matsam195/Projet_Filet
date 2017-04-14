@@ -13,9 +13,4 @@ def S0(u,v):
     return Point(u,v, 0)
     
 def SN(u,v):
-    return Point(u,v, 17*v)
-    
-
-print(interpolation(S0, SN, 1)(1,2).x)
-print(interpolation(S0, SN, 1)(1,2).y)
-print(interpolation(S0, SN, 1)(1,2).z)
+    return Point(u,v, cos(u))
