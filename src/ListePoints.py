@@ -23,11 +23,10 @@ class ListePoints:
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        
-        
-        print("taille : ")
-        print(self.n)
-        print(self.m)        
+        ax.set_xlim3d(0, 12)
+        ax.set_ylim3d(0, 12)
+        ax.set_zlim3d(-1,1)
+       
         # si le nb de papillons verticaux est pair, 
         # alors il existe un point fantome 
 #        for j in range(0, self.m):
@@ -42,7 +41,6 @@ class ListePoints:
                 P = self.get(i,j)
                 if (not self.estBord(P)):
                     for v in self.getVoisins(i, j):
-                        print("dans afficher", P.z)
                         x = [P.x, v.x]
                         y = [P.y, v.y]
                         z = [P.z, v.z]

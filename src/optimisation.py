@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 # P1, P2, P3, P4 sont des arrays de taille 3
 # l est la longueur cible
 # i le nombre d'appels (pour éviter de faire une infinité d'appels...)
-def optimisation(P1, P2, P3, P4, l, i):
+def optimisation(p1, p2, p3, p4, l, i):
     
     # paramètres
     epsilon = 0.0001 # <----------- modifiable
@@ -110,6 +110,10 @@ newP1=optimisation(P1,P2,P3,P4,1, 0)
 plt.plot([P2[0], P3[0], P4[0]], [P2[1], P3[1], P4[1]], 'bo')
 plt.plot([P1[0]], [P1[1]], 'ro')
 plt.plot([newP1[0]], [newP1[1]], 'yo')
+plt.show()
+print("Point optimisé attendu : (", 1/sqrt(2), ";", 1/sqrt(2), ")")
+print("Point optimisé trouvé : (", newP1[0], ";", newP1[1], ")")
+plt.figure()
 
 #####################################################################
 # Exemple moins simple
@@ -121,6 +125,9 @@ P1=[1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0]
 P2=[0.0, 0.0, 0.0]
 P3=[2.0/sqrt(2.0), 0.0, 0.0]
 P4=[1.0/sqrt(2.0), 1.2+1.0/sqrt(2.0), 0.0]
-#newP1=optimisation(P1,P2,P3,P4,1,0)
-#plt.plot([P1[0], P2[0], P3[0], P4[0]], [P1[1], P2[1], P3[1], P4[1]], 'bo')
-#plt.plot([newP1[0]], [newP1[1]], 'yo')
+newP1=optimisation(P1,P2,P3,P4,1,0)
+plt.plot([P1[0], P2[0], P3[0], P4[0]], [P1[1], P2[1], P3[1], P4[1]], 'go')
+plt.plot([newP1[0]], [newP1[1]], 'yo')
+plt.show()
+print("Point optimisé attendu : (", 1/sqrt(2), ";", 1/sqrt(2), " + epsilon)")
+print("Point optimisé trouvé : (", newP1[0], ";", newP1[1], ")")
