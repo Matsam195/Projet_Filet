@@ -107,13 +107,9 @@ for k in range(1, N+1):
     while (not estStable(mailleCour)):
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
-                v = mailleCour.getVoisins(i, j)
+                v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                p0 = [p.x, p.y, p.z]
-                v0 = [v[0].x, v[0].y, v[0].z]
-                v1 = [v[1].x, v[1].y, v[1].z]
-                v2 = [v[2].x, v[2].y, v[2].z]
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p0, v0, v1, v2, 1, 50)
+                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
         mailleCour = mailleSuiv
-    print("Tour numéro ", k)
+    print("Tour numero " + str(k) + " fini")
     mailleCour.afficher()

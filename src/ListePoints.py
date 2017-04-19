@@ -49,13 +49,17 @@ class ListePoints:
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))
+        assert ((i <= self.n-1) and (j <= self.m-1))
         # élimination des points fantomes :        
         if (i == self.n and j == 0) :
             if self.mailleN % 2 == 0:
+                assert isinstance(self.pts[0],Point) 
                 return self.pts[0]                        
         if (i == 0 and j == self.m) :
             if (self.mailleM % 2 == 0):
+                assert isinstance(self.pts[0],Point) 
                 return self.pts[0]
+        assert isinstance(self.pts[i + j*(self.n)],Point)                
         return self.pts[i + j*(self.n)]
         
     # on ne peut pas demander le voisin d'un bord pour le moment
@@ -88,6 +92,7 @@ class ListePoints:
             for j in range(0, self.m):
                 x = self.get(i,j).x
                 y = self.get(i,j).y
+                assert isinstance(surface(x,y),Point) 
                 self.pts[i+j*(self.n)] = surface(x,y) 
     
     def estBord(self, p):
