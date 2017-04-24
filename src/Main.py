@@ -14,13 +14,21 @@ from interpolation import *
 from estStable import *
 from optimisation import *
 
+
+
+L = 0.5
 angle = pi/2.5
 # On génère un nombre fixe de papillons 
-maille = Maille(5,5)
-
+maille = Maille(10,10)
 # Création de l'origine - 1er papillon en (0,0)
 origine = Point(0, 0, 0)
-premierPapillon = Papillon(origine, 1, 1, angle)
+
+
+
+
+
+
+premierPapillon = Papillon(origine, L, L, angle)
 maille.placerPapillon(premierPapillon)
 #premierPapillon.tracer()
 courant = premierPapillon
@@ -113,3 +121,6 @@ for k in range(1, N+1):
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
     mailleCour.afficher()
+
+
+plt.show()

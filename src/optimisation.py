@@ -27,7 +27,7 @@ def optimisation(P1,P2,P3,P4, l, i=0):
     
     # on teste qu'on n'a pas fait trop d'appels
     if i>nbIteMax:
-        print("ça a pas trop l'air de converger...")
+        #print("ça a pas trop l'air de converger...")
         return P1  
     
     # calcul nouveau point
@@ -42,7 +42,7 @@ def optimisation(P1,P2,P3,P4, l, i=0):
     newE=gradE(newP1, P2, P3, P4, l)
 
     if (module(newE) < epsilon):
-        print("on a fait " + str(i) + " appels récursifs :)")
+        #print("on a fait " + str(i) + " appels récursifs :)")
         return newP1
     else:
         return optimisation(newP1, P2, P3, P4, l, i+1)

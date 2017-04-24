@@ -13,7 +13,7 @@ from Point import *
 l = 1
 
 def assezProche(point, voisin):
-    return point.distance(voisin)-l<=0.1
+    return point.distance(voisin)-l<=0.2
 
 def estStable(M2Dtemp):
     for i in range(1, M2Dtemp.n-1):
