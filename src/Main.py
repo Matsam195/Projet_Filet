@@ -19,7 +19,7 @@ from optimisation import *
 L = 0.5
 angle = pi/2.5
 # On génère un nombre fixe de papillons 
-maille = Maille(10,10)
+maille = Maille(15,5)
 # Création de l'origine - 1er papillon en (0,0)
 origine = Point(0, 0, 0)
 
