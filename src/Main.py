@@ -98,18 +98,22 @@ mailleCour = liste_pts
 mailleSuiv = liste_pts
 # S0 fonction définie dans interpolation
 # SN fonction définie dans interpolation
-N = 10
-for k in range(1, N+1):
-    t = k/N
-    St = interpolation(S0, SN, t)
-    mailleCour.projection(St)
-    stable = False
-    while (not estStable(mailleCour)):
-        for i in range(1, mailleCour.n-1):
-            for j in range(1, mailleCour.m-1):
-                v = mailleCour.getVoisins(i,j)
-                p = mailleCour.get(i,j)
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
-        mailleCour = mailleSuiv
-    print("Tour numero " + str(k) + " fini")
-    mailleCour.afficher()
+#N = 10
+#for k in range(1, N+1):
+#    t = k/N
+#    St = interpolation(S0, SN, t)
+#    mailleCour.projection(St)
+#    stable = False
+#    while (not estStable(mailleCour)):
+#        print("N'est pas stable")
+#        for i in range(1, mailleCour.n-1):
+#            for j in range(1, mailleCour.m-1):
+#                v = mailleCour.getVoisins(i,j)
+#                p = mailleCour.get(i,j)
+#                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
+#        mailleCour = mailleSuiv
+#    print("Tour numero " + str(k) + " fini")
+#    mailleCour.afficher()
+#print("Fin des tours")
+
+print(varglob)

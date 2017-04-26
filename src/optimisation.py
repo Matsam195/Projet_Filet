@@ -15,7 +15,7 @@ from Point import *
 # P1, P2, P3, P4 sont des arrays de taille 3
 # l est la longueur cible
 # i le nombre d'appels (pour éviter de faire une infinité d'appels...)
-def optimisation(P1,P2,P3,P4, l, i=0):
+def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     assert isinstance(P1,Point) 
     assert isinstance(P2,Point) 
     assert isinstance(P3,Point) 
@@ -23,11 +23,11 @@ def optimisation(P1,P2,P3,P4, l, i=0):
 
     # paramètres
     epsilon = 0.0001 # <----------- modifiable
-    nbIteMax = 100 # <------------- modifiable
+    nbIteMax = 50 # <------------- modifiable
     
     # on teste qu'on n'a pas fait trop d'appels
     if i>nbIteMax:
-        print("ça a pas trop l'air de converger...")
+        print("Newton : ça a pas trop l'air de converger...")
         return P1  
     
     # calcul nouveau point
@@ -40,15 +40,29 @@ def optimisation(P1,P2,P3,P4, l, i=0):
     newP1.x = P1.x + res[0]
     newP1.y = P1.y + res[1]
     newE=gradE(newP1, P2, P3, P4, l)
-
-    if (module(newE) < epsilon):
-        print("on a fait " + str(i) + " appels récursifs :)")
-        return newP1
+        
+    if (oldP1==0):
+        return optimisation(newP1, P2, P3, P4, l, P1, i+1)
     else:
-        return optimisation(newP1, P2, P3, P4, l, i+1)
+        oldE=gradE(P1, P2, P3, P4, l)
+        veryOldE=gradE(oldP1, P2, P3, P4, l)
+        changement = module(diff(newE,oldE)) / module(diff(veryOldE,oldE))        
+        if (changement < epsilon):
+            print("on a fait " + str(i) + " appels récursifs.")
+            return newP1
+        else:
+            return optimisation(newP1, P2, P3, P4, l, P1, i+1)
 
 #####################################################################
 #                     FONCTIONS ANNEXES
+
+# A et B sont des list de taille 2
+# on retourne A-B
+def diff(A,B):
+    res = [0,0]
+    res[0]=A[0]-B[0]
+    res[1]=A[1]-B[1]
+    return res
 
 # ---------------------------------------------------------------------
 # P1, P2, P3, P4 sont des arrays de taille 3
@@ -125,17 +139,17 @@ def module(E):
 # rouge: point initial
 # jaune: point optimisé
     
-#P1=[1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0]
-#P2=[0.0, 0.0, 0.0]
-#P3=[2.0/sqrt(2.0), 0.0, 0.0]
-#P4=[1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0]
+#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0)
+#P2=Point(0.0, 0.0, 0.0)
+#P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
+#P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
 #newP1=optimisation(P1,P2,P3,P4,1, 0)
-#plt.plot([P2[0], P3[0], P4[0]], [P2[1], P3[1], P4[1]], 'bo')
-#plt.plot([P1[0]], [P1[1]], 'ro')
-#plt.plot([newP1[0]], [newP1[1]], 'yo')
+#plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
+#plt.plot([P1.x], [P1.y], 'ro')
+#plt.plot([newP1.x], [newP1.y], 'yo')
 #plt.show()
-#print("Point optimisé attendu : (", 1/sqrt(2), ";", 1/sqrt(2), ")")
-#print("Point optimisé trouvé : (", newP1[0], ";", newP1[1], ")")
+#print("Point optimise attendu : (", 1/sqrt(2), ";", 1/sqrt(2), ")")
+#print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
 #plt.figure()
 
 # ---------------------------------------------------------------------
@@ -145,13 +159,13 @@ def module(E):
 # rouge: point initial
 # jaune: point optimisé
 
-#P1=[1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0]
-#P2=[0.0, 0.0, 0.0]
-#P3=[2.0/sqrt(2.0), 0.0, 0.0]
-#P4=[1.0/sqrt(2.0), 1.2+1.0/sqrt(2.0), 0.0]
+#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0)
+#P2=Point(0.0, 0.0, 0.0)
+#P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
+#P4=Point(1.0/sqrt(2.0), 1.2+1.0/sqrt(2.0), 0.0)
 #newP1=optimisation(P1,P2,P3,P4,1,0)
-#plt.plot([P1[0], P2[0], P3[0], P4[0]], [P1[1], P2[1], P3[1], P4[1]], 'go')
-#plt.plot([newP1[0]], [newP1[1]], 'yo')
+#plt.plot([P1.x, P2.x, P3.x, P4.x], [P1.y, P2.y, P3.y, P4.y], 'go')
+#plt.plot([newP1.x], [newP1.y], 'yo')
 #plt.show()
-#print("Point optimisé attendu : (", 1/sqrt(2), ";", 1/sqrt(2), " + epsilon)")
-#print("Point optimisé trouvé : (", newP1[0], ";", newP1[1], ")")
+#print("Point optimise attendu : (", 1/sqrt(2), ";", 1/sqrt(2), " + epsilon)")
+#print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")

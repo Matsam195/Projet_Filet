@@ -9,11 +9,14 @@ from Maille import *
 from Papillon import *
 from Point import *
 
+# Condition de stabilité
+c = 0.2 #<---- à modifier
+
 # Longueur des barres rigides
 l = 1
 
 def assezProche(point, voisin):
-    return point.distance(voisin)-l<=0.1
+    return point.distance(voisin)-l<=c
 
 def estStable(M2Dtemp):
     for i in range(1, M2Dtemp.n-1):
