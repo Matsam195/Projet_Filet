@@ -19,8 +19,8 @@ from mpl_toolkits.mplot3d import Axes3D
 L = 0.5
 
             
-norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-cmap = plt.cm.inferno
+norm = mpl.colors.Normalize(vmin=L, vmax=L*3)
+cmap = plt.cm.cool
 
 class ListePoints: 
 
@@ -51,7 +51,7 @@ class ListePoints:
                         y = [P.y, v.y]
                         z = [P.z, v.z]
                         ax.plot(x,y,z, color = cmap(norm(P.distance(v))))       
-        #plt.show()
+        plt.show()
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))

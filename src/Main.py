@@ -72,7 +72,6 @@ while (j < maille.m):
 
 liste_pts = ListePoints(maille)
 #liste_pts.afficher()
-plt.axis([0, 8, 0, 4])
 #plt.show()
 
 
@@ -83,21 +82,29 @@ mailleSuiv = liste_pts
 # S0 fonction définie dans interpolation
 # SN fonction définie dans interpolation
 
-N = 10
+N = 1
+mailleCour.afficher()
+plt.show()
+x = []
+y = []
 for k in range(1, N+1):
     t = k/N
-    St = interpolation(S0, SN, t)
+    St = interpolation(S0, S0, t)
     mailleCour.projection(St)
     stable = False
-    while (not estStable(mailleCour)):
+    optiMax = 50
+    nbOpti = 0
+    while (not estStable(mailleCour) and nbOpti < 1):
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
+                print(i,j, " => ", mailleCour.get(i,j).x, mailleCour.get(i,j).y)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
+                #mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
         mailleCour = mailleSuiv
+        nbOpti = nbOpti + 1
     print("Tour numero " + str(k) + " fini")
     mailleCour.afficher()
 
-
+plt.plot(x, y)
 plt.show()

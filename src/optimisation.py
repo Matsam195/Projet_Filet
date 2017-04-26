@@ -22,12 +22,12 @@ def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     assert isinstance(P4,Point) 
 
     # paramètres
-    epsilon = 0.0001 # <----------- modifiable
+    epsilon = 0.01 # <----------- modifiable
     nbIteMax = 50 # <------------- modifiable
     
     # on teste qu'on n'a pas fait trop d'appels
     if i>nbIteMax:
-        print("Newton : ça a pas trop l'air de converger...")
+        #print("Newton : ça a pas trop l'air de converger...")
         return P1  
     
     # calcul nouveau point
@@ -40,15 +40,17 @@ def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     newP1.x = P1.x + res[0]
     newP1.y = P1.y + res[1]
     newE=gradE(newP1, P2, P3, P4, l)
-    if (module(newE) < epsilon):
-        #print("on a fait " + str(i) + " appels récursifs")
-        return newP1
+    
+    if (oldP1==0):
+        return optimisation(newP1, P2, P3, P4, l, P1, i+1)
     else:
         oldE=gradE(P1, P2, P3, P4, l)
         veryOldE=gradE(oldP1, P2, P3, P4, l)
+        if (module(diff(veryOldE,oldE))==0):
+            return newP1
         changement = module(diff(newE,oldE)) / module(diff(veryOldE,oldE))        
         if (changement < epsilon):
-            print("on a fait " + str(i) + " appels récursifs.")
+            #print("on a fait " + str(i) + " appels récursifs.")
             return newP1
         else:
             return optimisation(newP1, P2, P3, P4, l, P1, i+1)
