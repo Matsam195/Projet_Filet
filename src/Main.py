@@ -14,13 +14,21 @@ from interpolation import *
 from estStable import *
 from optimisation import *
 
+
+
+L = 0.5
 angle = pi/2.5
 # On génère un nombre fixe de papillons 
-maille = Maille(5,5)
-
+maille = Maille(15,5)
 # Création de l'origine - 1er papillon en (0,0)
 origine = Point(0, 0, 0)
-premierPapillon = Papillon(origine, 1, 1, angle)
+
+
+
+
+
+
+premierPapillon = Papillon(origine, L, L, angle)
 maille.placerPapillon(premierPapillon)
 #premierPapillon.tracer()
 courant = premierPapillon
@@ -62,30 +70,6 @@ while (j < maille.m):
 #plt.axis([0, 8, 0, 4])
 #plt.show() 
 
-## transformation des mailles de papillons en liste de points
-
-#
-######## Entrées : 
-#N = 10 			# Nb itérations
-#SN = ? 			# surface à approcher
-#
-######## Variables :
-## A définir à partir de l’initialisation déjà faite :
-#M2Dfinal = 		# Maille temporaire 2D, paramétrisation u v
-#
-#for t in range(1/N,1/N,1):  
-#    # interpolation de la surface pour trouver la nouvelle : S = (1-t) S0 + t SN
-#    Scour = interpolation(S0, SN, t) 	# surface idéale interpolée au temps t
-#    projection(mailleCour, St) 
-#    while !stable: 
-#        for each point2D sauf les bords:
-#            # optimisation locale des forces pour savoir où placer le point2D  
-#            # résultat dans une nouvelle maille
-#            optimisation(point2D, voisins, mailleCour) 
-#        
-######## Sortie : 
-#tracer(M3Dtemp) 	# on peut aussi afficher le maillage 2D : M2Dfinal
-
 liste_pts = ListePoints(maille)
 #liste_pts.afficher()
 plt.axis([0, 8, 0, 4])
@@ -98,22 +82,22 @@ mailleCour = liste_pts
 mailleSuiv = liste_pts
 # S0 fonction définie dans interpolation
 # SN fonction définie dans interpolation
-#N = 10
-#for k in range(1, N+1):
-#    t = k/N
-#    St = interpolation(S0, SN, t)
-#    mailleCour.projection(St)
-#    stable = False
-#    while (not estStable(mailleCour)):
-#        print("N'est pas stable")
-#        for i in range(1, mailleCour.n-1):
-#            for j in range(1, mailleCour.m-1):
-#                v = mailleCour.getVoisins(i,j)
-#                p = mailleCour.get(i,j)
-#                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
-#        mailleCour = mailleSuiv
-#    print("Tour numero " + str(k) + " fini")
-#    mailleCour.afficher()
-#print("Fin des tours")
 
-print(varglob)
+N = 10
+for k in range(1, N+1):
+    t = k/N
+    St = interpolation(S0, SN, t)
+    mailleCour.projection(St)
+    stable = False
+    while (not estStable(mailleCour)):
+        for i in range(1, mailleCour.n-1):
+            for j in range(1, mailleCour.m-1):
+                v = mailleCour.getVoisins(i,j)
+                p = mailleCour.get(i,j)
+                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], 1)
+        mailleCour = mailleSuiv
+    print("Tour numero " + str(k) + " fini")
+    mailleCour.afficher()
+
+
+plt.show()

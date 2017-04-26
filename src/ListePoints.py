@@ -11,10 +11,16 @@ from Papillon import *
 from Maille import *
 from interpolation import *
 
+
 #affichage 3d
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 
+L = 0.5
+
+            
+norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
+cmap = plt.cm.inferno
 
 class ListePoints: 
 
@@ -44,8 +50,8 @@ class ListePoints:
                         x = [P.x, v.x]
                         y = [P.y, v.y]
                         z = [P.z, v.z]
-                        ax.plot(x,y,z)       
-        plt.show()
+                        ax.plot(x,y,z, color = cmap(norm(P.distance(v))))       
+        #plt.show()
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))

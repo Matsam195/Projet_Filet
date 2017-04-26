@@ -27,7 +27,11 @@ def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     
     # on teste qu'on n'a pas fait trop d'appels
     if i>nbIteMax:
+<<<<<<< HEAD
         print("Newton : ça a pas trop l'air de converger...")
+=======
+        #print("ça a pas trop l'air de converger...")
+>>>>>>> f05f9cb36f73090df2ccf4c95a0912a0e9f601ce
         return P1  
     
     # calcul nouveau point
@@ -40,9 +44,16 @@ def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     newP1.x = P1.x + res[0]
     newP1.y = P1.y + res[1]
     newE=gradE(newP1, P2, P3, P4, l)
+<<<<<<< HEAD
         
     if (oldP1==0):
         return optimisation(newP1, P2, P3, P4, l, P1, i+1)
+=======
+
+    if (module(newE) < epsilon):
+        #print("on a fait " + str(i) + " appels récursifs :)")
+        return newP1
+>>>>>>> f05f9cb36f73090df2ccf4c95a0912a0e9f601ce
     else:
         oldE=gradE(P1, P2, P3, P4, l)
         veryOldE=gradE(oldP1, P2, P3, P4, l)
