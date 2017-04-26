@@ -16,11 +16,7 @@ c = 0.2 #<---- à modifier
 l = 1
 
 def assezProche(point, voisin):
-<<<<<<< HEAD
     return point.distance(voisin)-l<=c
-=======
-    return point.distance(voisin)-l<=0.2
->>>>>>> f05f9cb36f73090df2ccf4c95a0912a0e9f601ce
 
 def estStable(M2Dtemp):
     for i in range(1, M2Dtemp.n-1):
