@@ -18,8 +18,8 @@ from mpl_toolkits.mplot3d import Axes3D
 
 L = 0.5
 
-norm = mpl.colors.Normalize(vmin=L, vmax=L*3)
-cmap = plt.cm.cool
+norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
+cmap = plt.cm.inferno
 
 class ListePoints: 
 

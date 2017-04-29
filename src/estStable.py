@@ -10,10 +10,10 @@ from Papillon import *
 from Point import *
 
 # Condition de stabilité
-c = 0.15 #<---- à modifier
+c = 0.01 #<---- à modifier
 
 # Longueur des barres rigides
-l = 1
+l = 0.5
 
 def assezProche(point, voisin):
     return abs(point.distance(voisin)-l)<=c
