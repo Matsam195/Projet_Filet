@@ -40,12 +40,13 @@ def optimisation(P1,P2,P3,P4, l, oldP1=0, i=0):
     newP1.x = P1.x + res[0]
     newP1.y = P1.y + res[1]
     newE=gradE(newP1, P2, P3, P4, l)
-    if (module(newE) < epsilon):
-        #print("on a fait " + str(i) + " appels récursifs")
-        return newP1
+    if (oldP1==0):
+        return optimisation(newP1, P2, P3, P4, l, P1, i+1)
     else:
         oldE=gradE(P1, P2, P3, P4, l)
         veryOldE=gradE(oldP1, P2, P3, P4, l)
+        if (module(diff(veryOldE,oldE))==0):
+            return newP1
         changement = module(diff(newE,oldE)) / module(diff(veryOldE,oldE))        
         if (changement < epsilon):
             print("on a fait " + str(i) + " appels récursifs.")
@@ -139,7 +140,7 @@ def module(E):
 # rouge: point initial
 # jaune: point optimisé
     
-#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0)
+#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.3, 0.0)
 #P2=Point(0.0, 0.0, 0.0)
 #P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
 #P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
@@ -159,13 +160,42 @@ def module(E):
 # rouge: point initial
 # jaune: point optimisé
 
-#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0)
-#P2=Point(0.0, 0.0, 0.0)
-#P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
-#P4=Point(1.0/sqrt(2.0), 1.2+1.0/sqrt(2.0), 0.0)
-#newP1=optimisation(P1,P2,P3,P4,1,0)
-#plt.plot([P1.x, P2.x, P3.x, P4.x], [P1.y, P2.y, P3.y, P4.y], 'go')
-#plt.plot([newP1.x], [newP1.y], 'yo')
+P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.1, 0.0)
+P2=Point(0.0, 0.0, 0.0)
+P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
+P4=Point(1.0/sqrt(2.0), 1.2+1.0/sqrt(2.0), 0.0)
+newP1=optimisation(P1,P2,P3,P4,1,0)
+plt.plot([P1.x, P2.x, P3.x, P4.x], [P1.y, P2.y, P3.y, P4.y], 'go')
+plt.plot([P1.x], [P1.y], 'ro')
+plt.plot([newP1.x], [newP1.y], 'yo')
+plt.show()
+print("Point optimise attendu : (", 1/sqrt(2), ";", 1/sqrt(2), " + epsilon)")
+print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
+
+
+
+# ---------------------------------------------------------------------   
+# Exemple papillon
+# bleus: voisins
+# rouge: point initial
+# jaune: point optimisé
+#       
+#P13  =  Point(1.4265847744427302, 0.3454915028125263, 0.0)
+#P22  =  Point(0.9510565162951534, 0.6909830056250525, 0.0)
+#P23  =  Point(1.42658477444273, 0.8454915028125263, 0.0)
+#P24  =  Point(1.9021130325903068, 0.6909830056250525, 0.0)
+#P32  =  Point(0.9510565162951534, 1.1909830056250523, 0.0)
+#P33  =  Point(1.42658477444273, 1.0364745084375786, 0.0)
+#P34  =  Point(1.9021130325903068, 1.190983005625052, 0.0)
+#P43  =  Point(1.42658477444273, 1.5364745084375784, 0.0)
+#
+#
+#newP23=optimisation(P23,P22,P13,P24,1, 0)
+#newP33=optimisation(P33,P32,P43,P34,1, 0)
+#plt.plot([P32.x, P43.x, P34.x, P24.x, P13.x, P22.x], [P32.y, P43.y, P34.y, P24.y, P13.y, P22.y], 'bo')
+##plt.plot([P12.y, P32.x, P13.x, P33.x], [P12.y, P32.y, P13.y, P33.y], 'bo')
+#plt.plot([P23.x, P33.x], [P23.y, P33.y], 'ro')
+#plt.plot([newP23.x, newP33.x], [newP23.y, newP33.y], 'yo')
+#plt.axis([0,2,0,2])
 #plt.show()
-#print("Point optimise attendu : (", 1/sqrt(2), ";", 1/sqrt(2), " + epsilon)")
-#print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
+#plt.figure()

@@ -20,7 +20,7 @@ L = 0.5
 
             
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-cmap = plt.cm.inferno
+cmap = plt.cm.winter
 
 class ListePoints: 
 
