@@ -40,7 +40,7 @@ while i != maille.n -1:
     else :
         suivant = courant.ajouterPapillonInitColonne(courant.no, courant.nm, pi/2.5)
     maille.placerPapillon(suivant)
-    #suivant.tracer()
+#    suivant.tracer()
     courant = suivant    
     i = i + 1
     
@@ -86,23 +86,27 @@ N = 10
 E = L - 2*L*cos(angle)
 x = []
 y = []
+
+ponderations = [1,0,1]
+
 for k in range(1, N+1):
     t = k/N
     St = interpolation(S0, SN, t)
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, angle) and nbOpti < 100):
+    while (not estStable(mailleCour, L, E, angle, ponderations) and nbOpti < 10):
         nbOpti += 1
-        print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
+        #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
 #                print("Point de coordonnées ", i, j)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle)
+                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
-    mailleCour.afficher()
+#    mailleCour.afficher()
 
-#mailleCour.afficher()
+mailleCour.afficher()
+
