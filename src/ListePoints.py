@@ -28,9 +28,9 @@ class ListePoints:
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        ax.set_xlim3d(0, 12)
-        ax.set_ylim3d(0, 12)
-        ax.set_zlim3d(-1,1)
+        ax.set_xlim3d(-6, 12)
+        ax.set_ylim3d(-6, 12)
+        ax.set_zlim3d(-9,9)
         # si le nb de papillons verticaux est pair, 
         # alors il existe un point fantome 
 #        for j in range(0, self.m):
