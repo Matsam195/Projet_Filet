@@ -11,13 +11,14 @@ from Point import *
 
 #####################################################################
 #                     FONCTION PRINCIPALE
-def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
+def optimisation(P1,P2,P3,P4,P5, l, e, a, pond=[1,1,0], i=0):
     """
     Calcule la position optimale du point P1 par rapport à ses points
     voisins P2, P3, P4, lorsque la distance désirée entre ces points vaut l
     et que les deux angles formés par ces quatre points vaut a.
     P1, P2, P3, P4 : objets de type Point
     l : distance désirée entre les points
+    e : distance idéale avec le voisin "non relié"
     a : angle P2P1P3 et P3P1P4 désiré
     pond : tableau de taille 3 qui contient les coefficients de pondération
             dans l'expression de l'énergie.
@@ -32,6 +33,7 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
     assert isinstance(P2,Point) 
     assert isinstance(P3,Point) 
     assert isinstance(P4,Point) 
+    assert isinstance(P5,Point)
 
     # paramètres
     epsilon = 0.01 # Marge d'écart autorisée pour considérer optimisation finie
@@ -43,11 +45,11 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
         return P1
     
     # calcul nouveau point
-    oldE = Energie(P1, P2, P3, P4, l, a, pond)
+    oldE = Energie(P1, P2, P3, P4, P5, l, e, a, pond)
 #    print("Energie à l'itération ", i, " : ", oldE)
 #    print("Position du point à l'itération ", i, " : (", P1.x, ";", P1.y, ";", P1.z, ")")
     newP1=Point(P1.x, P1.y, P1.z) # X(k+1) dans la méthode de Newton
-    calculerDerivees(P1, P2, P3, P4, l, a, pond) # Calcul des dérivées simples et secondes
+    calculerDerivees(P1, P2, P3, P4, P5, l, e, a, pond) # Calcul des dérivées simples et secondes
     Df = DGradE() # Jacobien du Gradient de E
     f = gradE() # Gradient de E
 #    print("Dérivée première de E = ", f)
@@ -64,21 +66,21 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
 #    plt.plot([newP1.x], [newP1.y], 'go')
 #    plt.annotate(i, (P1.x, P1.y))
     if (i==0): # Au moins un tour d'optimisation
-        return optimisation(newP1, P2, P3, P4, l, a, pond, i+1)
+        return optimisation(newP1, P2, P3, P4, P5, l, e, a, pond, i+1)
     else:
-        newE = Energie(newP1, P2, P3, P4, l, a, pond)
+        newE = Energie(newP1, P2, P3, P4, P5, l, e, a, pond)
         changement = newE - oldE
 #        if (changement > 0):
 #            # La nouvelle énergie est plus grande que l'ancienne : on a déterioré la situation
 #            # On prend donc l'ancien point et on le renvoit
 #            print("Energie à l'itération ", i, " : ", oldE, "; arrêt car augmentation de l'énergie. Sinon, vaudrait", newE)
 #            return P1
-        if (abs(changement) < epsilon):
+        if (i==10):#(abs(changement) < epsilon):
             #print("on a fait " + str(i) + " appels récursifs.")
             #print("Fini après", i, "optimisations ! Energie finale : ", newE)
             return newP1
         else:
-            return optimisation(newP1, P2, P3, P4, l, a, pond, i+1)
+            return optimisation(newP1, P2, P3, P4, P5, l, e, a, pond, i+1)
 
 #####################################################################
 #                     FONCTIONS ANNEXES
@@ -93,12 +95,13 @@ def diff(A,B):
     res[1]=A[1]-B[1]
     return res
 
-def Energie(P1, P2, P3, P4, l, a, pond = [1,1,0]):
+def Energie(P1, P2, P3, P4, P5, l, e, a, pond = [1,1,0]):
     """
     Renvoie l'énergie d'un point P1 par rapport à ses voisins P2, P3, P4,
     pour une longueur cible l.
     P1, P2, P3, P4 : objets de type Point
     l : distance désirée entre les points
+    e : distance idéale avec le voisin "non relié"
     pond : tableau de taille 3 qui contient les coefficients de pondération
             dans l'expression de l'énergie.
             Energie = ponderations[0]*Energie(longueurs)
@@ -123,13 +126,13 @@ def Energie(P1, P2, P3, P4, l, a, pond = [1,1,0]):
         a2 = acos(N2/(S3*S4))
         energie += pond[1]*((a1-a)**2+(a2-a)**2)
     if (pond[2] != 0): # Energie du ressort fictif
-        # Remplir
-        energie += pond[2]*0
+        d4 = (P1.distance(P5)**2 -e**2)**2
+        energie += pond[2]*d4
     return energie
 
 derivees = [[0.0, 0.0], [0.0, 0.0, 0.0]]
 
-def calculerDerivees(P1, P2, P3, P4, l, a, pond):
+def calculerDerivees(P1, P2, P3, P4, P5, l, e,  a, pond):
     """
     Calcule et stocke dans la variable globale "derivees" les dérivées simples et
     secondes de l'énergie selon le critère de longueur l, le critère d'angle a,
@@ -146,6 +149,7 @@ def calculerDerivees(P1, P2, P3, P4, l, a, pond):
     assert isinstance(P2,Point) 
     assert isinstance(P3,Point) 
     assert isinstance(P4,Point)
+    assert isinstance(P5,Point)
     
     derivees[0][0] = 0
     derivees[0][1] = 0
@@ -161,7 +165,7 @@ def calculerDerivees(P1, P2, P3, P4, l, a, pond):
         derivees[0][0]+= (P1.x-P4.x)*((P1.x-P4.x)**2+(P1.y-P4.y)**2+(P1.z-P4.z)**2-l**2)
         derivees[0][0]*= 4*pond[0]
         
-        # dE/dx
+        # dE/dy
         derivees[0][1]= (P1.y-P2.y)*((P1.x-P2.x)**2+(P1.y-P2.y)**2+(P1.z-P2.z)**2-l**2)
         derivees[0][1]+= (P1.y-P3.y)*((P1.x-P3.x)**2+(P1.y-P3.y)**2+(P1.z-P3.z)**2-l**2)
         derivees[0][1]+= (P1.y-P4.y)*((P1.x-P4.x)**2+(P1.y-P4.y)**2+(P1.z-P4.z)**2-l**2)
@@ -184,6 +188,16 @@ def calculerDerivees(P1, P2, P3, P4, l, a, pond):
         derivees[1][2]+= (P1.x-P3.x)*(P1.y-P3.y)
         derivees[1][2]+= (P1.x-P4.x)*(P1.y-P4.y)
         derivees[1][2]*= 8*pond[0]
+    
+    if (pond[2] != 0): # Energie du point miroir     
+        d = P1.distance(P5)**2 - e**2
+        # dérivées ordre 1
+        derivees[0][0]+= 4*pond[2]* (P1.x-P5.x)*d
+        derivees[0][1]+= 4*pond[2]* (P1.y-P5.y)*d   
+        # dérivées ordre 2
+        derivees[1][0]+= 4*pond[2]* (2*(P1.x - P5.x)**2 + d)
+        derivees[1][1]+= 4*pond[2]* (2*(P1.y - P5.y)**2 + d)
+        derivees[1][2]+= 8*pond[2]* (P1.x-P5.x)*(P1.y-P5.y)
     
     if (pond[1] != 0): # Energie des angles
         
@@ -346,6 +360,12 @@ def module(E):
 # bleus: voisins
 # rouge: point initial
 # jaune: point optimisé
+    
+#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.3, 0.0)
+#P1=Point(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0)
+#P2=Point(0.0, 0.0, 0.0)
+#P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
+#P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
 
 #P1=Point(0.5+0.1, sqrt(3)/6+0.1, 0.0)
 #P2=Point(0.0, 0.0, 0.0)
@@ -396,13 +416,6 @@ def module(E):
 #print("Point optimise attendu : (", 0.5, ";", sqrt(3)/6, ")")
 #print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
 
-
-
-
-
-
-
-
 # ---------------------------------------------------------------------
 # Exemple moins simple
 # attendu : P1opt = (1/sqrt2, un peu + que 1/sqrt2)
@@ -449,3 +462,82 @@ def module(E):
 #plt.axis([0,2,0,2])
 #plt.show()
 #plt.figure()
+     
+    
+     
+###############################################################################
+# Exemple pour tester l'ajout du point mirroir dans le calcul de l'énergie
+###############################################################################
+#l=1.0
+#a = pi/2.5
+#e = l - 2*l*cos(a)
+#
+#P1=Point(0, l-l*cos(a), 0.0)
+#P2=Point(0.0, 0.0, 0.0)
+#P3=Point(l*sin(a), l*cos(a)-l, 0.0)
+#P4=Point(2*l*sin(a), 0.0, 0.0)
+#P5=Point(l*sin(a), l-l*cos(a), 0.0)
+#P =Point(l*sin(a), l*cos(a), 0.0)
+#
+#P.afficherSegment(P5)
+#P.afficherSegment(P2)
+#P.afficherSegment(P3)
+#P.afficherSegment(P4)
+#
+#newP1=optimisation(P1,P2,P3,P4, P5, l, e, a, [0.5, 0, 0.5])
+#
+#plt.plot([P2.x, P3.x, P4.x, P5.x, P.x], [P2.y, P3.y, P4.y, P5.y, P.y], 'bo')
+#plt.plot([P1.x], [P1.y], 'ro')
+#
+#P1 = newP1
+#
+#plt.plot([newP1.x], [newP1.y], 'yo')
+#plt.axis('equal')
+#plt.show()      
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
