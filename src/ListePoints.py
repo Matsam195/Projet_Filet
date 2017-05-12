@@ -58,7 +58,6 @@ class ListePoints:
         if (maxL-minL < 0.0000000000001):
             maxL = L*1.5
         
-        print("min = ", minL, " et max = ", maxL)
         norm = mpl.colors.Normalize(vmin=minL, vmax=maxL)
                         
         for i in range(1, self.n-1):
