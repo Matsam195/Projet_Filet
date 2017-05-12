@@ -20,7 +20,30 @@ L = 0.5
 
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
 cmapPlus = plt.cm.inferno
-cmapMoins = plt.cm.copper
+cmapMoins = plt.cm.cubehelix_r
+
+def make_colormap(seq):
+    """Return a LinearSegmentedColormap
+    seq: a sequence of floats and RGB-tuples. The floats should be increasing
+    and in the interval (0,1).
+    """
+    seq = [(None,) * 3, 0.0] + list(seq) + [1.0, (None,) * 3]
+    cdict = {'red': [], 'green': [], 'blue': []}
+    for i, item in enumerate(seq):
+        if isinstance(item, float):
+            r1, g1, b1 = seq[i - 1]
+            r2, g2, b2 = seq[i + 1]
+            cdict['red'].append([item, r1, r2])
+            cdict['green'].append([item, g1, g2])
+            cdict['blue'].append([item, b1, b2])
+    return mpl.colors.LinearSegmentedColormap('CustomMap', cdict)
+
+
+c = mpl.colors.ColorConverter().to_rgb
+cmapPlus = make_colormap(
+    [c('black'), c('orange'), 0.33, c('orange'), c('red'), 0.66, c('red')])
+cmapMoins= make_colormap(
+    [c('blue'), c('violet'), 0.33, c('violet'), c('black'), 0.66, c('black')])
 
 class ListePoints: 
 
@@ -71,12 +94,14 @@ class ListePoints:
                     y = [P.y, v.y]
                     z = [P.z, v.z]
                     if (P.distance(v) > L):
-                        ax.plot(x,y,z, color = cmap(normPlus(P.distance(v)))) 
+                        ax.plot(x,y,z, color = cmapPlus(normPlus(P.distance(v)))) 
                     else:
-                        ax.plot(x,y,z, color = cmap(normMoins(P.distance(v)))) 
+                        ax.plot(x,y,z, color = cmapMoins(normMoins(P.distance(v)))) 
         
-        ax1 = fig.add_axes([0.03, 0.1, 0.04, 0.6])    
-        mpl.colorbar.ColorbarBase(ax1, cmap=cmap, norm=norm)
+        ax1 = fig.add_axes([0.01, 0.3, 0.05, 0.3 ])    
+        mpl.colorbar.ColorbarBase(ax1, cmap=cmapPlus, norm=normPlus)
+        ax2 = fig.add_axes([0.01, 0.1, 0.05, 0.2])    
+        mpl.colorbar.ColorbarBase(ax2, cmap=cmapMoins, norm=normMoins)
         plt.show()
                 
     def get(self, i, j):
@@ -94,8 +119,7 @@ class ListePoints:
         assert isinstance(self.pts[i + j*(self.n)],Point)                
         return self.pts[i + j*(self.n)]
         
-    # on ne peut pas demander le voisin d'un bord pour le moment
-    # évite la gestion des fantômes aussi
+
     # les voisins sont donnés par ordre de j croissant
     def getVoisins2(self, i, j) :
         assert ((i > 0) and (j > 0))
@@ -111,8 +135,6 @@ class ListePoints:
         assert ((i >= 0) and (j >= 0))
         assert ((i <= self.n-1) and (j <= self.m-1))
         listeVoisins = []
-        if not(i>0 and j > 0 and i < self.n -1 and j < self.m -1): 
-            print(i, j, self.get(i,j).x)
         if (i>0 and j > 0 and i < self.n -1 and j < self.m -1):            
             listeVoisins.append(self.get(i, j-1))
             if (i % 2) == (j % 2): # flèche vers le bas 
