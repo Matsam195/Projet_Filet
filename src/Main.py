@@ -82,9 +82,12 @@ mailleSuiv = liste_pts
 # S0 fonction définie dans interpolation
 # SN fonction définie dans interpolation
 
-N = 10
+N = 50
 x = []
 y = []
+
+ponderations = [1,0,0]
+
 for k in range(1, N+1):
     t = k/N
     St = interpolation(S0, SN, t)
@@ -99,10 +102,10 @@ for k in range(1, N+1):
 #                print("Point de coordonnées ", i, j)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], L, angle)
+                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], L, angle, ponderations)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
-    #mailleCour.afficher()
-    
+#    mailleCour.afficher()
+
 mailleCour.afficher()
 

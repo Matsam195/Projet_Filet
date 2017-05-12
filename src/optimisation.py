@@ -35,11 +35,11 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
 
     # paramètres
     epsilon = 0.01 # Marge d'écart autorisée pour considérer optimisation finie
-    nbIteMax = 50 # Nombre d'itérations maximales autorisées
+    nbIteMax = 20 # Nombre d'itérations maximales autorisées
     
     # on teste qu'on n'a pas fait trop d'appels
     if i>nbIteMax:
-        #print("Newton : ça a pas trop l'air de converger...")
+        #print("Newton : ça n'a pas trop l'air de converger...")
         return P1
     
     # calcul nouveau point
@@ -61,8 +61,8 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
     res=cramer(l1, l2) # Résolution du système de Cramer
     newP1.x = P1.x + res[0] # X(k+1) = Z + X(k) dans les notes d'Annie
     newP1.y = P1.y + res[1]
-    plt.plot([newP1.x], [newP1.y], 'go')
-    plt.annotate(i, (P1.x, P1.y))
+#    plt.plot([newP1.x], [newP1.y], 'go')
+#    plt.annotate(i, (P1.x, P1.y))
     if (i==0): # Au moins un tour d'optimisation
         return optimisation(newP1, P2, P3, P4, l, a, pond, i+1)
     else:
@@ -346,61 +346,62 @@ def module(E):
 # bleus: voisins
 # rouge: point initial
 # jaune: point optimisé
-    
-#P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.3, 0.0)
-#P1=Point(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0)
+
+#P1=Point(0.5+0.1, sqrt(3)/6+0.1, 0.0)
 #P2=Point(0.0, 0.0, 0.0)
-#P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
-#P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
+#P3=Point(0.5, sqrt(3)/2, 0.0)
+#P4=Point(1.0, 0.0, 0.0)
+#
+#N1 = (P3.x-P1.x)*(P2.x-P1.x)+(P3.y-P1.y)*(P2.y-P1.y)+(P3.z-P1.z)*(P2.z-P1.z)
+#N2 = (P4.x-P1.x)*(P3.x-P1.x)+(P4.y-P1.y)*(P3.y-P1.y)+(P4.z-P1.z)*(P3.z-P1.z)
+#S2 = sqrt((P2.x-P1.x)**2+(P2.y-P1.y)**2+(P2.z-P1.z)**2)
+#S3 = sqrt((P3.x-P1.x)**2+(P3.y-P1.y)**2+(P3.z-P1.z)**2)
+#S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
+#a1 = acos(N1/(S2*S3))
+#a2 = acos(N2/(S3*S4))
+#
+#l=sqrt(3)/3
+#a = 2*pi/3
+#
+#print("")
+#print("Point initial :")
+#print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
+#print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
+#print("")
+#
+#newP1=optimisation(P1,P2,P3,P4, l, a, [1, 1, 0])
+#
+#plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
+#plt.plot([P1.x], [P1.y], 'ro')
+#
+#P1 = newP1
+#
+#N1 = (P3.x-P1.x)*(P2.x-P1.x)+(P3.y-P1.y)*(P2.y-P1.y)+(P3.z-P1.z)*(P2.z-P1.z)
+#N2 = (P4.x-P1.x)*(P3.x-P1.x)+(P4.y-P1.y)*(P3.y-P1.y)+(P4.z-P1.z)*(P3.z-P1.z)
+#S2 = sqrt((P2.x-P1.x)**2+(P2.y-P1.y)**2+(P2.z-P1.z)**2)
+#S3 = sqrt((P3.x-P1.x)**2+(P3.y-P1.y)**2+(P3.z-P1.z)**2)
+#S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
+#a1 = acos(N1/(S2*S3))
+#a2 = acos(N2/(S3*S4))
+#
+#print("")
+#print("Point final :")
+#print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
+#print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
+#print("")
+#
+#plt.plot([newP1.x], [newP1.y], 'yo')
+#plt.axis('equal')
+#plt.show()
+#print("Point optimise attendu : (", 0.5, ";", sqrt(3)/6, ")")
+#print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
 
-P1=Point(0.5+0.2, sqrt(3)/6+0.2, 0.0)
-P2=Point(0.0, 0.0, 0.0)
-P3=Point(0.5, sqrt(3)/2, 0.0)
-P4=Point(1.0, 0.0, 0.0)
 
-N1 = (P3.x-P1.x)*(P2.x-P1.x)+(P3.y-P1.y)*(P2.y-P1.y)+(P3.z-P1.z)*(P2.z-P1.z)
-N2 = (P4.x-P1.x)*(P3.x-P1.x)+(P4.y-P1.y)*(P3.y-P1.y)+(P4.z-P1.z)*(P3.z-P1.z)
-S2 = sqrt((P2.x-P1.x)**2+(P2.y-P1.y)**2+(P2.z-P1.z)**2)
-S3 = sqrt((P3.x-P1.x)**2+(P3.y-P1.y)**2+(P3.z-P1.z)**2)
-S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
-a1 = acos(N1/(S2*S3))
-a2 = acos(N2/(S3*S4))
 
-l=sqrt(3)/3
-a = 2*pi/3
 
-print("")
-print("Point initial :")
-print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
-print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
-print("")
 
-newP1=optimisation(P1,P2,P3,P4, l, a, [0, 1, 0])
 
-plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
-plt.plot([P1.x], [P1.y], 'ro')
 
-P1 = newP1
-
-N1 = (P3.x-P1.x)*(P2.x-P1.x)+(P3.y-P1.y)*(P2.y-P1.y)+(P3.z-P1.z)*(P2.z-P1.z)
-N2 = (P4.x-P1.x)*(P3.x-P1.x)+(P4.y-P1.y)*(P3.y-P1.y)+(P4.z-P1.z)*(P3.z-P1.z)
-S2 = sqrt((P2.x-P1.x)**2+(P2.y-P1.y)**2+(P2.z-P1.z)**2)
-S3 = sqrt((P3.x-P1.x)**2+(P3.y-P1.y)**2+(P3.z-P1.z)**2)
-S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
-a1 = acos(N1/(S2*S3))
-a2 = acos(N2/(S3*S4))
-
-print("")
-print("Point final :")
-print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
-print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
-print("")
-
-plt.plot([newP1.x], [newP1.y], 'yo')
-plt.axis('equal')
-plt.show()
-print("Point optimise attendu : (", 0.5, ";", sqrt(3)/6, ")")
-print("Point optimise trouve : (", newP1.x, ";", newP1.y, ")")
 
 # ---------------------------------------------------------------------
 # Exemple moins simple
