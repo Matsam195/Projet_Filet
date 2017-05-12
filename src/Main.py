@@ -91,9 +91,9 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, angle) and nbOpti < 100):
+    while (not estStable(mailleCour, L, angle) and nbOpti < 10):
         nbOpti += 1
-        print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
+        #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
 #                print("Point de coordonnées ", i, j)
@@ -105,5 +105,4 @@ for k in range(1, N+1):
     #mailleCour.afficher()
     
 mailleCour.afficher()
-print (mailleCour.n, mailleCour.m)
 

@@ -11,7 +11,7 @@ from Point import *
 
 #####################################################################
 #                     FONCTION PRINCIPALE
-def optimisation(P1,P2,P3,P4, l, a, pond=[1,1,0], i=0):
+def optimisation(P1,P2,P3,P4, l, a, pond=[1,0,0], i=0):
     """
     Calcule la position optimale du point P1 par rapport à ses points
     voisins P2, P3, P4, lorsque la distance désirée entre ces points vaut l
@@ -75,7 +75,7 @@ def optimisation(P1,P2,P3,P4, l, a, pond=[1,1,0], i=0):
 #            return P1
         if (abs(changement) < epsilon):
             #print("on a fait " + str(i) + " appels récursifs.")
-            print("Fini après", i, "optimisations ! Energie finale : ", newE)
+            #print("Fini après", i, "optimisations ! Energie finale : ", newE)
             return newP1
         else:
             return optimisation(newP1, P2, P3, P4, l, a, pond, i+1)

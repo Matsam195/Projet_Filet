@@ -19,7 +19,8 @@ from mpl_toolkits.mplot3d import Axes3D
 L = 0.5
 
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-cmap = plt.cm.inferno
+cmapPlus = plt.cm.inferno
+cmapMoins = plt.cm.copper
 
 class ListePoints: 
 
@@ -57,8 +58,9 @@ class ListePoints:
         if (maxL-minL < 0.0000000000001):
             maxL = L*1.5
         
-        norm = mpl.colors.Normalize(vmin=minL, vmax=maxL)
-                        
+        normPlus = mpl.colors.Normalize(vmin=L, vmax=maxL)
+        normMoins = mpl.colors.Normalize(vmin=minL, vmax=L)
+                
         for i in range(0, self.n):
             for j in range(0, self.m):
                 P = self.get(i,j)
@@ -68,7 +70,10 @@ class ListePoints:
                     x = [P.x, v.x]
                     y = [P.y, v.y]
                     z = [P.z, v.z]
-                    ax.plot(x,y,z, color = cmap(norm(P.distance(v))))       
+                    if (P.distance(v) > L):
+                        ax.plot(x,y,z, color = cmap(normPlus(P.distance(v)))) 
+                    else:
+                        ax.plot(x,y,z, color = cmap(normMoins(P.distance(v)))) 
         
         ax1 = fig.add_axes([0.03, 0.1, 0.04, 0.6])    
         mpl.colorbar.ColorbarBase(ax1, cmap=cmap, norm=norm)
