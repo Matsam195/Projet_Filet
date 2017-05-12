@@ -41,9 +41,9 @@ def make_colormap(seq):
 
 c = mpl.colors.ColorConverter().to_rgb
 cmapPlus = make_colormap(
-    [c('black'), c('orange'), 0.33, c('orange'), c('red'), 0.66, c('red')])
+    [c('black'), c('orange'), 0.10, c('orange'), c('red'), 0.65, c('red')])
 cmapMoins= make_colormap(
-    [c('blue'), c('violet'), 0.33, c('violet'), c('black'), 0.66, c('black')])
+    [c('blue'), c('purple'), 0.45, c('purple'), c('black'), 0.90, c('black')])
 
 class ListePoints: 
 

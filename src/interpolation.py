@@ -13,6 +13,6 @@ def S0(u,v):
     return Point(u,v, 0)
     
 def SN(u,v):
-    return Point(u,v, 2/sqrt(2*pi) * exp(-(u-3)**2  -(v-3)**2/2*2))
+    return Point(u,v, 5/sqrt(2*pi) * exp(-(u-5)**2  -(v-5)**2/2*2))
     
     
