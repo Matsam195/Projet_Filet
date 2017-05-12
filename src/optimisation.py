@@ -93,7 +93,7 @@ def diff(A,B):
     res[1]=A[1]-B[1]
     return res
 
-def Energie(P1, P2, P3, P4, l, a, pond):
+def Energie(P1, P2, P3, P4, l, a, pond = [1,1,0]):
     """
     Renvoie l'énergie d'un point P1 par rapport à ses voisins P2, P3, P4,
     pour une longueur cible l.
@@ -366,14 +366,14 @@ S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
 a1 = acos(N1/(S2*S3))
 a2 = acos(N2/(S3*S4))
 
+l=sqrt(3)/3
+a = 2*pi/3
+
 print("")
 print("Point initial :")
 print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
 print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
 print("")
-
-l=sqrt(3)/3
-a = 2*pi/3
 
 newP1=optimisation(P1,P2,P3,P4, l, a, [0, 1, 0])
 
