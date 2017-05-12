@@ -82,11 +82,11 @@ mailleSuiv = liste_pts
 # S0 fonction définie dans interpolation
 # SN fonction définie dans interpolation
 
-N = 50
+N = 10
 x = []
 y = []
 
-ponderations = [1,0,0]
+ponderations = [1,1,0]
 
 for k in range(1, N+1):
     t = k/N
