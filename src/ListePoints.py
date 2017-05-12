@@ -31,7 +31,6 @@ class ListePoints:
         ax.set_xlim3d(0, 12)
         ax.set_ylim3d(0, 12)
         ax.set_zlim3d(-1,1)
-       
         # si le nb de papillons verticaux est pair, 
         # alors il existe un point fantome 
 #        for j in range(0, self.m):
@@ -41,6 +40,19 @@ class ListePoints:
 #                    l = self.getVoisins(i,j)    
 #                    for voisin in range(0, 3) :
 #                        l[voisin].afficherSegment(self.get(i,j))
+        
+        maxL = L
+        for i in range(1, self.n-1):
+            for j in range(1, self.m-1):
+                P = self.get(i,j)
+                if (not self.estBord(P)):
+                    for v in self.getVoisins(i, j):
+                        if(maxL < P.distance(v)):
+                            maxL = P.distance(v)
+        
+        
+        norm = mpl.colors.Normalize(vmin=L, vmax=maxL)
+                        
         for i in range(1, self.n-1):
             for j in range(1, self.m-1):
                 P = self.get(i,j)
@@ -50,6 +62,9 @@ class ListePoints:
                         y = [P.y, v.y]
                         z = [P.z, v.z]
                         ax.plot(x,y,z, color = cmap(norm(P.distance(v))))       
+        
+        ax1 = fig.add_axes([0.03, 0.1, 0.04, 0.6])    
+        mpl.colorbar.ColorbarBase(ax1, cmap=cmap, norm=norm)
         plt.show()
                 
     def get(self, i, j):
