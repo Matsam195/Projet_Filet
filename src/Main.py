@@ -87,7 +87,7 @@ x = []
 y = []
 for k in range(1, N+1):
     t = k/N
-    St = interpolation(S0, SN, t)
+    St = interpolation(S0, S0, t)
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
@@ -102,5 +102,5 @@ for k in range(1, N+1):
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
     #mailleCour.afficher()
-
+    
 mailleCour.afficher()

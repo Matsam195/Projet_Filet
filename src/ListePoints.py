@@ -41,7 +41,10 @@ class ListePoints:
 #                    for voisin in range(0, 3) :
 #                        l[voisin].afficherSegment(self.get(i,j))
         
+        #sert à fixer la valeur de norme e couleur
+        #on cherche le min et le max
         maxL = L
+        minL = L
         for i in range(1, self.n-1):
             for j in range(1, self.m-1):
                 P = self.get(i,j)
@@ -49,9 +52,14 @@ class ListePoints:
                     for v in self.getVoisins(i, j):
                         if(maxL < P.distance(v)):
                             maxL = P.distance(v)
+                        if(minL > P.distance(v)):
+                            minL = P.distance(v) 
+                            
+        if (maxL-minL < 0.0000000000001):
+            maxL = L*1.5
         
-        
-        norm = mpl.colors.Normalize(vmin=L, vmax=maxL)
+        print("min = ", minL, " et max = ", maxL)
+        norm = mpl.colors.Normalize(vmin=minL, vmax=maxL)
                         
         for i in range(1, self.n-1):
             for j in range(1, self.m-1):
