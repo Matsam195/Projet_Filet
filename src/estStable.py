@@ -11,7 +11,7 @@ from Point import *
 from optimisation import *
 
 # Condition de stabilité
-seuil = 0.01 #<---- à modifier
+seuil = 0.00000000001 #<---- à modifier
 
 def energieAssezFaible(point, voisins, longueur, angle, ponderations):
     return(Energie(point, voisins[0], voisins[1], voisins[2], longueur, angle, ponderations) < seuil)

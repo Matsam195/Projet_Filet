@@ -86,7 +86,7 @@ N = 10
 x = []
 y = []
 
-ponderations = [1,1,0]
+ponderations = [1,0.6,0]
 
 for k in range(1, N+1):
     t = k/N
@@ -94,7 +94,7 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, angle, ponderations) and nbOpti < 10):
+    while (not estStable(mailleCour, L, angle, ponderations) and nbOpti < 25):
         nbOpti += 1
         #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
