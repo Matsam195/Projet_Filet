@@ -8,20 +8,19 @@ Created on Wed Apr  5 16:05:12 2017
 from Maille import *
 from Papillon import *
 from Point import *
+from optimisation import *
 
 # Condition de stabilité
-c = 0.01 #<---- à modifier
+seuil = 0.01 #<---- à modifier
 
-# Longueur des barres rigides
-l = 0.5
+def energieAssezFaible(point, voisins, longueur, angle):
+    return(Energie(point, voisins[0], voisins[1], voisins[2], longueur, angle) < seuil)
 
-def assezProche(point, voisin):
-    return abs(point.distance(voisin)-l)<=c
-
-def estStable(M2Dtemp):
-    for i in range(1, M2Dtemp.n-1):
-        for j in range(1, M2Dtemp.m-1):
-            for v in M2Dtemp.getVoisins(i, j):
-                if (not assezProche(M2Dtemp.get(i,j), v)):
-                    return False
+def estStable(maille, longueur, angle):
+    for i in range(1, maille.n-1):
+        for j in range(1, maille.m-1):
+            point = maille.get(i,j)
+            voisins = maille.getVoisins(i, j)
+            if (not energieAssezFaible(point, voisins, longueur, angle)):
+                return False
     return True
