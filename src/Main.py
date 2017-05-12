@@ -91,16 +91,17 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour) and nbOpti < 100):
+    while (not estStable(mailleCour, L, angle) and nbOpti < 100):
         nbOpti += 1
-        print("N'est pas stable. Optimisation...")
+        print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
+#                print("Point de coordonnées ", i, j)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], L)
+                mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], L, angle)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
-    #mailleCour.afficher()
+    mailleCour.afficher()
 
-mailleCour.afficher()
+#mailleCour.afficher()
