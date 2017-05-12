@@ -19,7 +19,31 @@ from mpl_toolkits.mplot3d import Axes3D
 L = 0.5
 
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-cmap = plt.cm.inferno
+cmapPlus = plt.cm.inferno
+cmapMoins = plt.cm.cubehelix_r
+
+def make_colormap(seq):
+    """Return a LinearSegmentedColormap
+    seq: a sequence of floats and RGB-tuples. The floats should be increasing
+    and in the interval (0,1).
+    """
+    seq = [(None,) * 3, 0.0] + list(seq) + [1.0, (None,) * 3]
+    cdict = {'red': [], 'green': [], 'blue': []}
+    for i, item in enumerate(seq):
+        if isinstance(item, float):
+            r1, g1, b1 = seq[i - 1]
+            r2, g2, b2 = seq[i + 1]
+            cdict['red'].append([item, r1, r2])
+            cdict['green'].append([item, g1, g2])
+            cdict['blue'].append([item, b1, b2])
+    return mpl.colors.LinearSegmentedColormap('CustomMap', cdict)
+
+
+c = mpl.colors.ColorConverter().to_rgb
+cmapPlus = make_colormap(
+    [c('black'), c('orange'), 0.33, c('orange'), c('red'), 0.66, c('red')])
+cmapMoins= make_colormap(
+    [c('blue'), c('violet'), 0.33, c('violet'), c('black'), 0.66, c('black')])
 
 class ListePoints: 
 
@@ -45,33 +69,39 @@ class ListePoints:
         #on cherche le min et le max
         maxL = L
         minL = L
-        for i in range(1, self.n-1):
-            for j in range(1, self.m-1):
+        for i in range(0, self.n):
+            for j in range(0, self.m):
                 P = self.get(i,j)
-                if (not self.estBord(P)):
-                    for v in self.getVoisins(i, j):
-                        if(maxL < P.distance(v)):
-                            maxL = P.distance(v)
-                        if(minL > P.distance(v)):
-                            minL = P.distance(v) 
+                for v in self.getVoisins(i, j):
+                    if(maxL < P.distance(v)):
+                        maxL = P.distance(v)
+                    if(minL > P.distance(v)):
+                        minL = P.distance(v) 
                             
         if (maxL-minL < 0.0000000000001):
             maxL = L*1.5
         
-        norm = mpl.colors.Normalize(vmin=minL, vmax=maxL)
-                        
-        for i in range(1, self.n-1):
-            for j in range(1, self.m-1):
+        normPlus = mpl.colors.Normalize(vmin=L, vmax=maxL)
+        normMoins = mpl.colors.Normalize(vmin=minL, vmax=L)
+                
+        for i in range(0, self.n):
+            for j in range(0, self.m):
                 P = self.get(i,j)
-                if (not self.estBord(P)):
-                    for v in self.getVoisins(i, j):
-                        x = [P.x, v.x]
-                        y = [P.y, v.y]
-                        z = [P.z, v.z]
-                        ax.plot(x,y,z, color = cmap(norm(P.distance(v))))       
+                for v in self.getVoisins(i, j):
+                    if v.x == -1:
+                        print("voisin chelou de ",i,j)
+                    x = [P.x, v.x]
+                    y = [P.y, v.y]
+                    z = [P.z, v.z]
+                    if (P.distance(v) > L):
+                        ax.plot(x,y,z, color = cmapPlus(normPlus(P.distance(v)))) 
+                    else:
+                        ax.plot(x,y,z, color = cmapMoins(normMoins(P.distance(v)))) 
         
-        ax1 = fig.add_axes([0.03, 0.1, 0.04, 0.6])    
-        mpl.colorbar.ColorbarBase(ax1, cmap=cmap, norm=norm)
+        ax1 = fig.add_axes([0.01, 0.3, 0.05, 0.3 ])    
+        mpl.colorbar.ColorbarBase(ax1, cmap=cmapPlus, norm=normPlus)
+        ax2 = fig.add_axes([0.01, 0.1, 0.05, 0.2])    
+        mpl.colorbar.ColorbarBase(ax2, cmap=cmapMoins, norm=normMoins)
         plt.show()
                 
     def get(self, i, j):
@@ -89,30 +119,62 @@ class ListePoints:
         assert isinstance(self.pts[i + j*(self.n)],Point)                
         return self.pts[i + j*(self.n)]
         
-    # on ne peut pas demander le voisin d'un bord pour le moment
-    # évite la gestion des fantômes aussi
+
     # les voisins sont donnés par ordre de j croissant
-    def getVoisins(self, i, j) :
+    def getVoisins2(self, i, j) :
         assert ((i > 0) and (j > 0))
         assert ((i < self.n-1) and (j < self.m-1))
         listeVoisins = []
         listeVoisins.append(self.get(i, j-1))
-        if (i % 2) == (j % 2): # flèche vers le bas 
-            listeVoisins.append(self.get(i+1,j))
-        else :
-            listeVoisins.append(self.get(i-1, j))
+        listeVoisins.append(self.get(i+1,j))
+        listeVoisins.append(self.get(i-1, j))
         listeVoisins.append(self.get(i, j+1))
         return listeVoisins
-#    def setL(self, i, j, val):
-#        assert(i>=0 and j>=0)        
-#        self.pts[i + j*(self.n)] = val
-#        # gestion des points fantomes : 
-#        if (i == self.n and j == 0) :
-#            if self.mailleN % 2 == 0:
-#                self.pts[i + j*(self.n)] = Point(-1,-1)                        
-#        if (i == 0 and j == self.m) :
-#            if (self.mailleM % 2 == 0):
-#                self.pts[i + j*(self.n)] = Point(-1,-1)
+        
+    def getVoisins(self, i, j) :
+        assert ((i >= 0) and (j >= 0))
+        assert ((i <= self.n-1) and (j <= self.m-1))
+        listeVoisins = []
+        if (i>0 and j > 0 and i < self.n -1 and j < self.m -1):            
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))        
+
+        elif (i==0 and j >0 and j < self.m -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            if (self.get(i,j+1).x != -1):
+                listeVoisins.append(self.get(i, j+1))
+
+        elif (j==0 and i >0 and i < self.n -1):
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))
+        
+        elif (j==self.m-1 and i >0 and i < self.n -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                if (self.get(i+1,j).x != -1):
+                    listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+        
+        elif (i==self.n-1 and j >0 and j < self.m -1): 
+            listeVoisins.append(self.get(i, j-1))
+            if not((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1, j))
+            if (self.get(i,j+1).y != -1):    
+                listeVoisins.append(self.get(i, j+1))
+            
+
+        return listeVoisins
+
               
     def projection(self, surface):
         for i in range(0, self.n):

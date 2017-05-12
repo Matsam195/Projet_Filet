@@ -40,7 +40,7 @@ while i != maille.n -1:
     else :
         suivant = courant.ajouterPapillonInitColonne(courant.no, courant.nm, pi/2.5)
     maille.placerPapillon(suivant)
-    #suivant.tracer()
+#    suivant.tracer()
     courant = suivant    
     i = i + 1
     
@@ -94,9 +94,9 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, angle, ponderations) and nbOpti < 100):
+    while (not estStable(mailleCour, L, angle, ponderations) and nbOpti < 10):
         nbOpti += 1
-#        print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
+        #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
 #                print("Point de coordonnées ", i, j)
@@ -108,3 +108,4 @@ for k in range(1, N+1):
 #    mailleCour.afficher()
 
 mailleCour.afficher()
+
