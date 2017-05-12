@@ -40,7 +40,7 @@ while i != maille.n -1:
     else :
         suivant = courant.ajouterPapillonInitColonne(courant.no, courant.nm, pi/2.5)
     maille.placerPapillon(suivant)
-    #suivant.tracer()
+#    suivant.tracer()
     courant = suivant    
     i = i + 1
     
@@ -104,3 +104,4 @@ for k in range(1, N+1):
     #mailleCour.afficher()
     
 mailleCour.afficher()
+print (mailleCour.n, mailleCour.m)
