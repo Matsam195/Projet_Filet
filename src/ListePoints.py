@@ -41,9 +41,9 @@ def make_colormap(seq):
 
 c = mpl.colors.ColorConverter().to_rgb
 cmapPlus = make_colormap(
-    [c('black'), c('orange'), 0.33, c('orange'), c('red'), 0.66, c('red')])
+    [c('black'), c('orange'), 0.10, c('orange'), c('red'), 0.65, c('red')])
 cmapMoins= make_colormap(
-    [c('blue'), c('violet'), 0.33, c('violet'), c('black'), 0.66, c('black')])
+    [c('blue'), c('purple'), 0.45, c('purple'), c('black'), 0.90, c('black')])
 
 class ListePoints: 
 
@@ -72,7 +72,7 @@ class ListePoints:
         for i in range(0, self.n):
             for j in range(0, self.m):
                 P = self.get(i,j)
-                for v in self.getVoisins(i, j):
+                for v in self.getVoisinsAffichage(i, j):
                     if(maxL < P.distance(v)):
                         maxL = P.distance(v)
                     if(minL > P.distance(v)):
@@ -87,7 +87,7 @@ class ListePoints:
         for i in range(0, self.n):
             for j in range(0, self.m):
                 P = self.get(i,j)
-                for v in self.getVoisins(i, j):
+                for v in self.getVoisinsAffichage(i, j):
                     if v.x == -1:
                         print("voisin chelou de ",i,j)
                     x = [P.x, v.x]
@@ -121,17 +121,25 @@ class ListePoints:
         
 
     # les voisins sont donnés par ordre de j croissant
-    def getVoisins2(self, i, j) :
+    def getVoisins(self, i, j) :
         assert ((i > 0) and (j > 0))
         assert ((i < self.n-1) and (j < self.m-1))
         listeVoisins = []
         listeVoisins.append(self.get(i, j-1))
-        listeVoisins.append(self.get(i+1,j))
-        listeVoisins.append(self.get(i-1, j))
+        if (i % 2) == (j % 2): # flèche vers le bas 
+            listeVoisins.append(self.get(i+1,j))
+        else :
+            listeVoisins.append(self.get(i-1, j))
         listeVoisins.append(self.get(i, j+1))
+        # Renvoie le point mirroir :
+        if (i % 2) == (j % 2): # flèche vers le bas 
+            listeVoisins.append(self.get(i-1,j))
+        else :
+            listeVoisins.append(self.get(i+1, j))
         return listeVoisins
         
-    def getVoisins(self, i, j) :
+        
+    def getVoisinsAffichage(self, i, j) :
         assert ((i >= 0) and (j >= 0))
         assert ((i <= self.n-1) and (j <= self.m-1))
         listeVoisins = []
