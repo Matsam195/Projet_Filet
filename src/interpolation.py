@@ -14,8 +14,8 @@ def S0(u,v):
     
 def SN(u,v):
     amplitude = 6
-    sigma = 2 # Ecart-type
-    mu = [5, 5] # Centrer la Gaussienne
+    sigma = 1 # Ecart-type
+    mu = [4, 3] # Centrer la Gaussienne
     return Point(u,v, amplitude/(sigma*sqrt(2*pi)) * exp(-((u-mu[0])**2 + (v-mu[1])**2)/(sigma*sigma*2)))
     
     

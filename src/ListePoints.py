@@ -15,10 +15,7 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 
 L = 0.5
-
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-#cmapPlus = plt.cm.inferno
-#cmapMoins = plt.cm.cubehelix_r
 
 def make_colormap(seq):
     """Return a LinearSegmentedColormap
@@ -53,16 +50,6 @@ class ListePoints:
         ax.set_xlim3d(-6, 12)
         ax.set_ylim3d(-6, 12)
         ax.set_zlim3d(-9,9)
-        # si le nb de papillons verticaux est pair, 
-        # alors il existe un point fantome 
-#        for j in range(0, self.m):
-#            for i in range(0, self.n):
-#                self.get(i,j).afficherPoint()   
-#                if (i > 0 and i < self.n-1 and j > 0 and j < self.m-1) :
-#                    l = self.getVoisins(i,j)    
-#                    for voisin in range(0, 3) :
-#                        l[voisin].afficherSegment(self.get(i,j))
-        
         #sert à fixer la valeur de norme e couleur
         #on cherche le min et le max
         maxL = L
@@ -244,5 +231,4 @@ class ListePoints:
             self.pts[(self.n-1)*(self.m)] = fantome
         else :
             self.pts[self.n*self.m -1] = fantome        
-                    
                     

@@ -21,7 +21,6 @@ liste_pts = ListePoints(25, 15, L, angle, origine)
 #liste_pts.afficher()
 #plt.show()
 
-
 ######################################################################################################################
 
 mailleCour = liste_pts
@@ -42,7 +41,7 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, E, angle, ponderations) and nbOpti < 25):
+    while (not estStable2(mailleCour, L, E, angle, ponderations) and nbOpti < 50):
         nbOpti += 1
         #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
@@ -56,4 +55,3 @@ for k in range(1, N+1):
 #    mailleCour.afficher()
 
 mailleCour.afficher()
-
