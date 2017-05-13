@@ -7,8 +7,6 @@ Created on Sat Apr  8 12:15:29 2017
 
 import numpy as np
 from Point import *
-from Papillon import *
-from Maille import *
 from interpolation import *
 
 
@@ -106,19 +104,8 @@ class ListePoints:
                 
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))
-        assert ((i <= self.n-1) and (j <= self.m-1))
-        # élimination des points fantomes s'ils existent:        
-        if (i == self.n and j == 0) :
-            if self.mailleN % 2 == 0:
-                assert isinstance(self.pts[0],Point) 
-                return self.pts[0]                        
-        if (i == 0 and j == self.m) :
-            if (self.mailleM % 2 == 0):
-                assert isinstance(self.pts[0],Point) 
-                return self.pts[0]
-        assert isinstance(self.pts[i + j*(self.n)],Point)                
-        return self.pts[i + j*(self.n)]
-        
+        assert ((i <= self.n-1) and (j <= self.m-1))       
+        return self.pts[i*self.m + j]
 
     # les voisins sont donnés par ordre de j croissant
     def getVoisins(self, i, j) :
@@ -204,7 +191,7 @@ class ListePoints:
                 x = self.get(i,j).x
                 y = self.get(i,j).y
                 assert isinstance(surface(x,y),Point) 
-                self.pts[i+j*(self.n)] = surface(x,y) 
+                self.pts[i*self.m + j] = surface(x,y) 
     
     def estBord(self, p):
         return (p.x == 0 or p.y == 0 or p.x == self.n or p.y == self.m)
@@ -214,7 +201,7 @@ class ListePoints:
         
 
  
-    def __init__(self, maille):    
+    def __init__(self, n, m, l, a, origine):    
         """ Initialisation d'une liste de points à partir d'une maille
             une liste de points contient :
             - n points en hauteur
@@ -224,111 +211,38 @@ class ListePoints:
             de coordonnées (-1,-1,0), il faudra les considérer dans les fonctions de
             plus haut niveau
         """
-        self.n = maille.n + 1 # n le nombre de points en hauteur
-        self.mailleN = maille.n
-        self.m = maille.m * 2 + 2 # m le nombre de points en largeur 
-        self.mailleM = maille.m
+        assert isinstance(origine, Point)          
+        self.n = n + 1      # n le nombre de points en hauteur
+        self.m = m * 2 + 2  # m le nombre de points en largeur 
+        self.n_pap = n        
+        self.m_pap = m
         
         # initialisation de la liste de points à partir de la maille :
         liste = []
-        nb_pts = 0
-        pair = (maille.n % 2) == 0
+        pair = (n % 2) == 0
         fantome = Point(-1,-1, 0)
+        x = origine.x
+        y = origine.y        
         
-        # on trace les deux premières colonnes :
-        for i in range(0,maille.n,2):
-            liste.append(maille.get(i,0).so)
-            liste.append(maille.get(i,0).no)
-            nb_pts = nb_pts + 2        
-        
-        # ajout d'un point encore au dessus 
-        if pair:
-            liste.append(fantome)
-            nb_pts = nb_pts +1
-        #else :
-            # rien car les papillons sont déjà ajoutés en entier
-                
-        # on compte le point de la première ligne :
-        for i in range(0,maille.n,2):        
-            liste.append(maille.get(i,0).sm)
-            liste.append(maille.get(i,0).nm)
-            nb_pts = nb_pts + 2
+        # on trace le coeur de la maille       
+        hmoy = l - l*cos(a)
+        # on va tracer chaque ligne, on considère le milieu et pour avoir l'alternance
+        # on utilise la parité de l'indice
+        for i in range(0, self.n): #range(1, self.n-1):
+            signe = 2*(i%2)-1
+            for j in range(0, self.m):
+                liste.append(Point( x + j*l*sin(a), 
+                                    y + l*cos(a)/2 + i*hmoy + signe*l*cos(a)/2,
+                                    0))
+                signe = - signe
 
-        if pair:
-            liste.append(maille.get(maille.n-1,0).no)
-            nb_pts = nb_pts + 1
-        
-        # on trace le corps, à chaque coup on a deux colonnes créées :
-        j = 0
-        while j < maille.m:
-            for i in range(0,maille.n,2):
-                liste.append(maille.get(i,j).se)
-                liste.append(maille.get(i,j).ne)
-                nb_pts = nb_pts + 2
-                
-            # ajout d'un point encore au dessus 
-            if pair:
-                liste.append(maille.get(maille.n-1, j).nm)
-                nb_pts = nb_pts +1
-                
-            # ajout du point de la première ligne éventuellemnt
-            if maille.m > j +1: 
-                liste.append(maille.get(0,j+1).sm)
-                nb_pts = nb_pts +1
-            else : 
-                liste.append(fantome)
-                nb_pts = nb_pts + 1
-                
-            for i in range(1,maille.n,2):
-                liste.append(maille.get(i,j).se)
-                liste.append(maille.get(i,j).ne)
-                nb_pts = nb_pts + 2
-            
-            # Ajout du point en bas à droite de la grille
-            if not pair :
-                if maille.m > j + 1:
-                    liste.append(maille.get(maille.n-1, j+1).nm)
-                    nb_pts = nb_pts + 1                     
-                else:
-                    liste.append(fantome)
-                    nb_pts = nb_pts +1
-                
-            j = j + 1    
-            
-            if not(j >= maille.m):
-                for i in range(0,maille.n,2):
-                    liste.append(maille.get(i,j).se)
-                    liste.append(maille.get(i,j).ne)
-                    nb_pts = nb_pts + 2
-                
-                # Ajout éventuel d'un point en haut de la grille 
-                if pair :
-                    liste.append(maille.get(maille.n-1,j).nm)
-                    nb_pts = nb_pts + 1
-                # ajout du point de la première ligne
-                if maille.m > j +1: 
-                    liste.append(maille.get(0,j+1).sm)
-                    nb_pts = nb_pts +1
-                else : 
-                    liste.append(fantome)
-                    nb_pts = nb_pts + 1                
-                
-                for i in range(1,maille.n,2):
-                    liste.append(maille.get(i,j).se)
-                    liste.append(maille.get(i,j).ne)
-                    nb_pts = nb_pts + 2
-
-                if not pair :
-                    if maille.m > j + 1:
-                        liste.append(maille.get(maille.n-1, j+1).nm)
-                        nb_pts = nb_pts + 1                     
-                    else:
-                        liste.append(fantome)
-                        nb_pts = nb_pts +1                
-                
-                j = j+1 
-                
-        if not pair:
-            liste.append(fantome)
-            
         self.pts = liste
+        
+        # On modifie les points fantomes :
+        self.pts[self.m -1] = fantome
+        if pair:
+            self.pts[(self.n-1)*(self.m)] = fantome
+        else :
+            self.pts[self.n*self.m -1] = fantome        
+                    
+                    
