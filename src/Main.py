@@ -16,8 +16,7 @@ from optimisation import *
 
 L = 0.5
 angle = pi/2.5
-origine = Point(0, 0, 0)
-liste_pts = ListePoints(25, 15, L, angle, origine)
+liste_pts = ListePoints(25, 15, L, angle)
 #liste_pts.afficher()
 #plt.show()
 

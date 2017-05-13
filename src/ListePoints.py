@@ -188,15 +188,24 @@ class ListePoints:
         
 
  
-    def __init__(self, n, m, l, a, origine):    
-        """ Initialisation d'une liste de points à partir d'une maille
-            une liste de points contient :
-            - n points en hauteur
-            - m points en largeur
-            n et m sont calculés à partir de la maille en entrée pour plus de clarté
+    def __init__(self, n, m, l, a, origine=Point(0,0,0)):    
+        """ Initialisation d'une liste de points à partir de :
+            n :     nombre de papillons souhaité en hauteur
+            m :     idem en largeur
+            l :     longueur des cotés des papillons
+            a :     angle d'ouverture du papillon
+            orig :  point à l'origine de la maille 
+        
+        Un objet de ce type contient :
+            n :     nombre de points en hauteur
+            m :     nombre de points en largeur
+            n_pap : nombre de papillons en hauteur
+            m_pap : nombre de papillons en largeur
+            
+            n et m sont calculés à partir de n_pap et m_pap en entrée
             si des points sont manquants aux extremités, on ajoute des points "fantômes"
-            de coordonnées (-1,-1,0), il faudra les considérer dans les fonctions de
-            plus haut niveau
+            de coordonnées (-1,-1,0), 
+            il faudra les considérer dans les fonctions de plus haut niveau
         """
         assert isinstance(origine, Point)          
         self.n = n + 1      # n le nombre de points en hauteur
