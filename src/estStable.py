@@ -5,14 +5,12 @@ Created on Wed Apr  5 16:05:12 2017
 @author: belotm
 """
 
-from Maille import *
-from Papillon import *
 from Point import *
 from optimisation import *
 
 # Conditions de stabilité
 lastEnergie = 0
-seuil = 0.01
+seuil = 0.001
 
 def angleMax(maille):
     maximum = 0
@@ -76,6 +74,7 @@ def estStable2(maille, longueur, e, angle, ponderations):
     Méthode 2 : si l'optimisation a fait varier l'énergie totale de la maille d'au moins seuil, la maille n'est pas stable.
                 si la variation de l'énergie totale de la maille est inférieure au seuil, la maille est stable.
     """
+    global lastEnergie
     energie = energieMaille(maille, longueur, e, angle, ponderations)
     stable = abs(energie-lastEnergie) < seuil
     lastEnergie = energie

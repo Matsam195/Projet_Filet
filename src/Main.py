@@ -88,7 +88,7 @@ N = 10
 x = []
 y = []
 
-ponderations = [1,0.5,0]
+ponderations = [1,0.50,0]
 E = L - 2*L*cos(angle)
 
 for k in range(1, N+1):
@@ -97,8 +97,7 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, E, angle, ponderations) and nbOpti < 50):
-        print("Angle max :", angleMax(mailleCour))
+    while (not estStable2(mailleCour, L, E, angle, ponderations)):
         print("Energie de la maille :", energieMaille(mailleCour, L, E, angle, ponderations))
         nbOpti += 1
         #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
@@ -110,6 +109,6 @@ for k in range(1, N+1):
                 mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
-#    mailleCour.afficher()
+    #mailleCour.afficher()
 
 mailleCour.afficher()
