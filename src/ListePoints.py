@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr  8 12:15:29 2017
@@ -9,18 +10,18 @@ import numpy as np
 from Point import *
 from interpolation import *
 
-
-#affichage 3d
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 
 L = 0.5
-norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
+
+################################################################################
+#modules d'affichage
 
 def make_colormap(seq):
-    """Return a LinearSegmentedColormap
-    seq: a sequence of floats and RGB-tuples. The floats should be increasing
-    and in the interval (0,1).
+    """Renvoie une LinearFragmented COlormap
+    seq: une sequence de floats et RGB-tuples.Les floats doivent être croissants
+   et dans l'intervalle (0,1).
     """
     seq = [(None,) * 3, 0.0] + list(seq) + [1.0, (None,) * 3]
     cdict = {'red': [], 'green': [], 'blue': []}
@@ -50,7 +51,8 @@ class ListePoints:
         ax.set_xlim3d(-6, 12)
         ax.set_ylim3d(-6, 12)
         ax.set_zlim3d(-9,9)
-        #sert à fixer la valeur de norme e couleur
+        
+        #sert à fixer automatiquement la valeur de norme de couleur
         #on cherche le min et le max
         maxL = L
         minL = L

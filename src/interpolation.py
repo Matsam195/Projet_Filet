@@ -27,4 +27,5 @@ def SN(u,v):
     mu = [4, 3] # Centrer la Gaussienne
     return Point(u,v, amplitude/(sigma*sqrt(2*pi)) * exp(-((u-mu[0])**2 + (v-mu[1])**2)/(sigma*sigma*2)))
     
-    
+# def S_lat(u,v):
+#     return Point(u,v, cos(v))
