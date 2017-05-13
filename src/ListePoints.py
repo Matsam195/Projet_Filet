@@ -108,7 +108,8 @@ class ListePoints:
         assert ((i <= self.n-1) and (j <= self.m-1))
         current = self.get(i,j)
         listeVoisins = []
-        if (not self.estBord(self.get(i,j))):
+        #points intérieurs
+        if (i>0 and j > 0 and i < self.n -1 and j < self.m -1):
             listeVoisins.append(self.get(i, j-1))
             if (i % 2) == (j % 2): # flèche vers le bas 
                 listeVoisins.append(self.get(i+1,j))
@@ -129,7 +130,7 @@ class ListePoints:
             else :
                 #n'annule que l'énergie avec longueurs
                 listeVoisins.append(Point(current.x, current.y-L, current.z))
-            if self.get(i,j+1)!=-1 :     
+            if self.get(i,j+1).x!=-1 :     
                 listeVoisins.append(self.get(i, j+1))
             else:
                 #point fantôme. n'annule que l'énergie avec les longueurs
@@ -140,6 +141,7 @@ class ListePoints:
                 listeVoisins.append(Point(current.x, current.y-L, current.z))
             else :
                 listeVoisins.append(self.get(i+1,j))
+
 
         elif (j==0 and i >0 and i < self.n -1):
             #virtuel
@@ -197,6 +199,50 @@ class ListePoints:
             else:
                 listeVoisins.append(Point(current.x, current.y+L, current.z))
         
+        elif (i==0 and j==0):
+            listeVoisins.append(Point(current.x-L, current.y, current.z))
+            listeVoisins.append(self.get(i+1, j)) #note : même parité de i et j
+            listeVoisins.append(self.get(i, j+1))
+            listeVoisins.append(Point(current.x-L, current.y, current.z))
+        
+        elif (i==0 and j==self.m-1 and current.x != -1):
+            listeVoisins.append(self.get(i, j-1))
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else: 
+                listeVoisins.add(Point(current.x, current.y-L, current.z))
+            listeVoisins.append(Point(current.x+L, current.y, current.z))
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.add(Point(current.x, current.y-L, current.z))
+            else: 
+                listeVoisins.append(self.get(i+1,j))
+            
+
+            
+        elif(i==self.n-1 and j==0 and current.x != -1):
+            listeVoisins.append(Point(current.x-L, current.y, current.z))
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else: 
+                listeVoisins.append(self.get(i-1,j))
+            listeVoisins.append(self.get(i, j+1))
+            if not((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else: 
+                listeVoisins.append(self.get(i-1,j))
+            
+        elif(i==self.n-1 and j == self.m-1 and current.x != -1):
+            listeVoisins.append(self.get(i,j-1))
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else: 
+                listeVoisins.add(self.get(i-1,j))
+                listeVoisins.append(self.get(i, j+1))
+            listeVoisins.append(Point(current.x+L, current.y, current.z))
+            if not((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else: 
+                listeVoisins.append(self.get(i-1,j))
         return listeVoisins
         
         
