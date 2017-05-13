@@ -5,7 +5,7 @@ Created on Wed Apr  5 16:05:12 2017
 @author: belotm
 """
 
-from Point import *
+from ListePoints import *
 from optimisation import *
 
 # Conditions de stabilité
@@ -53,6 +53,7 @@ def energieMaille(maille, longueur, e, angle, ponderations):
 def energieAssezFaible(point, voisins, longueur, e, angle, ponderations):
     return(Energie(point, voisins[0], voisins[1], voisins[2], voisins[3], longueur, e, angle, ponderations) < seuil)
 
+
 def estStable1(maille, longueur, e, angle, ponderations):
     """
     Estime si la maille est stable, selon les critères d'énergie longueur, e, angle et ponderations (cf. help(Energie)).
@@ -60,8 +61,8 @@ def estStable1(maille, longueur, e, angle, ponderations):
                 si tous les points de la maille ont moins d'énergie que le seuil, la maille est stable.
     """
     maximum = 0
-    for i in range(1, maille.n-1):
-        for j in range(1, maille.m-1):
+    for i in range(1, maille.n_pap-1):
+        for j in range(1, maille.m_pap-1):
             point = maille.get(i,j)
             voisins = maille.getVoisins(i, j)
             if (not energieAssezFaible(point, voisins, longueur, e, angle, ponderations)):
