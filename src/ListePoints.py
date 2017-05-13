@@ -78,9 +78,10 @@ class ListePoints:
                     if(minL > P.distance(v)):
                         minL = P.distance(v) 
                             
-        if (maxL-minL < 0.0000000000001):
-            maxL = L*1.5
-        
+        if (maxL-L < 0.000000001):
+            maxL = L*1.25
+        if (L - minL < 0.000000001):
+            minL = L*0.75
         normPlus = mpl.colors.Normalize(vmin=L, vmax=maxL)
         normMoins = mpl.colors.Normalize(vmin=minL, vmax=L)
                 

@@ -93,7 +93,7 @@ E = L - 2*L*cos(angle)
 
 for k in range(1, N+1):
     t = k/N
-    St = interpolation(S0, SN, t)
+    St = interpolation(S0, S0, t)
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
