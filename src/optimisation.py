@@ -83,7 +83,7 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
  
     # Arrêt de la méthode si divergence
     if i>nbIteMax:
-        #print("Newton : non convergence de la méthode")
+        print("Newton : non convergence de la méthode")
         return P1
     
     # Calcul du nouveau point
@@ -120,13 +120,22 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
     else:
         newE = Energie(newP1, P2, P3, P4, P5, pond, l, e, a)
         changement = newE - oldE
-#        if (changement > 0):
-#            # La nouvelle énergie est plus grande que l'ancienne : on a déterioré la situation
-#            # On prend donc l'ancien point et on le renvoit
-#            print("Energie à l'itération ", i, " : ", oldE, "; arrêt car augmentation de l'énergie. Sinon, vaudrait", newE)
-#            return P1
-        if (abs(changement) < epsilon):
-#            print("Fini après", i, "optimisations ! Energie finale : ", newE)
+        if (changement > 0):
+            # La nouvelle énergie est plus grande que l'ancienne : on a déterioré la situation
+            # On prend donc l'ancien point et on le renvoit
+            #print("Energie à l'itération ", i, " : ", oldE, "; arrêt car augmentation de l'énergie. Sinon, vaudrait", newE)
+            #print("Tentative de faire demi-tour.")
+            newP1.x = P1.x-res[0]
+            newP1.y = P1.y-res[1]
+            newE = Energie(newP1, P2, P3, P4, P5, pond, l, e, a)
+            changement = newE - oldE
+            if (changement > 0):
+                #print("Le demi-tour n'a toujours pas amélioré la situation. Renvoi de P1.")
+                return P1
+            #else:
+                #print("C'est mieux ! On continue l'optimisation sur cela.")
+                #print("Nouvelle énergie :", newE)
+        if (abs(changement) < epsilon): # La variation d'énergie est suffisamment faible pour arrêter l'optimisation
             if (graph==True):
                 # Recalibrage de l'échelle
                 minX=minX-(maxX-minX)
