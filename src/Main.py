@@ -49,7 +49,7 @@ for k in range(1, N+1):
 #                print("Point de coordonnées ", i, j)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
+                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
 #    mailleCour.afficher()
