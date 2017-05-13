@@ -63,9 +63,10 @@ class ListePoints:
                     if(minL > P.distance(v)):
                         minL = P.distance(v) 
                             
-        if (maxL-minL < 0.0000000000001):
-            maxL = L*1.5
-        
+        if (maxL-L < 0.000000001):
+            maxL = L*1.25
+        if (L-minL < 0.000000001):
+            minL = L*0.75        
         normPlus = mpl.colors.Normalize(vmin=L, vmax=maxL)
         normMoins = mpl.colors.Normalize(vmin=minL, vmax=L)
                 
@@ -103,20 +104,99 @@ class ListePoints:
         renvoie une liste de 4 voisins :
             les trois premiers sont les voisins directs triés par colonne croissante
             le dernier est le voisin non relié (symétrie horizontale)"""
-        assert ((i > 0) and (j > 0))
-        assert ((i < self.n-1) and (j < self.m-1))
+        assert ((i >= 0) and (j >= 0))
+        assert ((i <= self.n-1) and (j <= self.m-1))
+        current = self.get(i,j)
         listeVoisins = []
-        listeVoisins.append(self.get(i, j-1))
-        if (i % 2) == (j % 2): # flèche vers le bas 
-            listeVoisins.append(self.get(i+1,j))
-        else :
-            listeVoisins.append(self.get(i-1, j))
-        listeVoisins.append(self.get(i, j+1))
-        # Renvoie le point mirroir :
-        if (i % 2) == (j % 2): # flèche vers le bas 
-            listeVoisins.append(self.get(i-1,j))
-        else :
-            listeVoisins.append(self.get(i+1, j))
+        if (not self.estBord(self.get(i,j))):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1,j))
+            else :
+                listeVoisins.append(self.get(i+1, j))
+        
+        # Gestion de tous les cas de bord
+        elif (i==0 and j >0 and j < self.m -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                #n'annule que l'énergie avec longueurs
+                listeVoisins.append(Point(current.x, current.y-L, current.z))
+            if self.get(i,j+1)!=-1 :     
+                listeVoisins.append(self.get(i, j+1))
+            else:
+                #point fantôme. n'annule que l'énergie avec les longueurs
+                listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                #n'annule que l'énergie avec longueurs
+                listeVoisins.append(Point(current.x, current.y-L, current.z))
+            else :
+                listeVoisins.append(self.get(i+1,j))
+
+        elif (j==0 and i >0 and i < self.n -1):
+            #virtuel
+            listeVoisins.append(Point(current.x-L, current.y, current.z))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1,j))
+            else :
+                listeVoisins.append(self.get(i+1, j))
+        
+        elif (j==self.m-1 and i >0 and i < self.n -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                if (self.get(i+1,j).x != -1):
+                    listeVoisins.append(self.get(i+1,j))
+                else:
+                    #Point fantôme
+                    listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else:
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1, j))
+            else: 
+                if (self.get(i+1,j).x != -1):
+                    listeVoisins.append(self.get(i+1,j))
+                else:
+                    #Point fantôme
+                    listeVoisins.append(Point(current.x, current.y+L, current.z))   
+        
+        elif (i==self.n-1 and j >0 and j < self.m -1): 
+            if (self.get(i,j-1).x != -1):
+                listeVoisins.append(self.get(i, j-1))
+            else:
+                listeVoisins.append(Point(current.x -L, current.y, current.z))
+            
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else:
+                listeVoisins.append(self.get(i-1, j))
+
+            if (self.get(i,j+1).y != -1):    
+                listeVoisins.append(self.get(i, j+1))
+            else:
+                listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1, j))
+            else:
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+        
         return listeVoisins
         
         
@@ -188,15 +268,24 @@ class ListePoints:
         
 
  
-    def __init__(self, n, m, l, a, origine):    
-        """ Initialisation d'une liste de points à partir d'une maille
-            une liste de points contient :
-            - n points en hauteur
-            - m points en largeur
-            n et m sont calculés à partir de la maille en entrée pour plus de clarté
+    def __init__(self, n, m, l, a, origine = Point(0,0,0)):    
+        """ Initialisation d'une liste de points à partir de :
+            n :     nombre de papillons souhaité en hauteur
+            m :     idem en largeur
+            l :     longueur des cotés des papillons
+            a :     angle d'ouverture du papillon
+            orig :  point à l'origine de la maille 
+        
+        Un objet de ce type contient :
+            n :     nombre de points en hauteur
+            m :     nombre de points en largeur
+            n_pap : nombre de papillons en hauteur
+            m_pap : nombre de papillons en largeur
+            
+            n et m sont calculés à partir de n_pap et m_pap en entrée
             si des points sont manquants aux extremités, on ajoute des points "fantômes"
-            de coordonnées (-1,-1,0), il faudra les considérer dans les fonctions de
-            plus haut niveau
+            de coordonnées (-1,-1,0), 
+            il faudra les considérer dans les fonctions de plus haut niveau
         """
         assert isinstance(origine, Point)          
         self.n = n + 1      # n le nombre de points en hauteur
