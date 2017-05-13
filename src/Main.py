@@ -113,4 +113,3 @@ for k in range(1, N+1):
 #    mailleCour.afficher()
 
 mailleCour.afficher()
-
