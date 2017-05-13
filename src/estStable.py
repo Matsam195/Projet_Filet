@@ -47,7 +47,7 @@ def energieMaille(maille, longueur, e, angle, ponderations):
         for j in range(1, maille.m-1):
             point = maille.get(i,j)
             voisins = maille.getVoisins(i, j)
-            somme += Energie(point, voisins[0], voisins[1], voisins[2], voisins[3], longueur, e, angle, ponderations)
+            somme += Energie(point, voisins[0], voisins[1], voisins[2], voisins[3], ponderations, longueur, e, angle)
     return somme
 
 def energieAssezFaible(point, voisins, longueur, e, angle, ponderations):

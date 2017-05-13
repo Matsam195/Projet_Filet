@@ -10,8 +10,11 @@ import matplotlib.pyplot as plt
 from Point import *
 from annotation3D import annotate3D
 
-####################################################################
-# PARAMETRES D'OPTIMISATION
+#####################################################################
+#                                                                   #
+#                 PARAMETRES POUR L'OPTIMISATION                    #
+#                                                                   #
+#####################################################################
 
 # Marge d'écart autorisée pour considérer optimisation finie
 epsilon = 0.1 
@@ -19,21 +22,12 @@ epsilon = 0.1
 # Nombre d'itérations maximales autorisées
 nbIteMax = 50
 
-####################################################################
-# PARAMETRES ET VARIABLES POUR LE GRAPH D'ENERGIE
-# (ne pas toucher)
-minX=0
-maxX=0
-minY=0
-maxY=0
-xs=[]
-ys=[]
-zs=[]
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d') 
-
 #####################################################################
-#                     FONCTION PRINCIPALE
+#                                                                   #
+#                     FONCTION PRINCIPALE                           #
+#                                                                   #
+#####################################################################
+
 def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, graph=False, i=0):
     """
     Calcule la position optimale du point P1 par rapport à ses points
@@ -55,19 +49,19 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
     Résultat : un Point qui est la nouvelle position optimisée de P1
     """
     
-    # vérification des paramètres
-    assert isinstance(P1,Point) 
-    assert isinstance(P2,Point) 
-    assert isinstance(P3,Point) 
-    assert isinstance(P4,Point) 
+    # Vérification des paramètres
+    assert isinstance(P1, Point) 
+    assert isinstance(P2, Point) 
+    assert isinstance(P3, Point) 
+    assert isinstance(P4, Point) 
     if (pond[2]!=0):
-        assert isinstance(P5,Point)    
+        assert isinstance(P5, Point)    
 
-    # paramètres généraux
+    # Paramètres généraux
     global epsilon
     global nbIteMax
     
-    # paramètres pour le graphique
+    # Paramètres et initialisation pour le graphique
     global xs
     global ys
     global zs
@@ -75,11 +69,8 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
     global maxX
     global minY
     global maxY
-    global ax
-    global fig
-    # initialisation pour le graphique
+    global annot
     if (graph==True and i==0):
-        print("allo1")
         minX=P1.x
         maxX=P1.x
         minY=P1.y
@@ -87,26 +78,25 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
         xs.append(P1.x)
         ys.append(P1.y)
         zs.append(Energie(P1, P2, P3, P4, P5, pond, l, e, a))
-        annotate3D(ax, s='P1', xyz=(P1.x, P1.y, Energie(P1,P2,P3,P4,P5,pond=pond, l=l, e=e, a=a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')
-    
-    
-    # on teste qu'on n'a pas fait trop d'appels
+        point = (P1.x, P1.y, Energie(P1, P2, P3, P4, P5, pond, l, e, a))
+        annot.append(point)
+ 
+    # Arrêt de la méthode si divergence
     if i>nbIteMax:
-        #print("Newton : ça n'a pas trop l'air de converger...")
+        #print("Newton : non convergence de la méthode")
         return P1
     
     # Calcul du nouveau point
-    oldE = Energie(P1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a)
+    oldE = Energie(P1, P2, P3, P4, P5, pond, l, e, a)
     newP1=Point(P1.x, P1.y, P1.z) # X(k+1) dans la méthode de Newton
-    calculerDerivees(P1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a) # Calcul des dérivées simples et secondes
+    calculerDerivees(P1, P2, P3, P4, P5, pond, l, e, a) # Calcul des dérivées simples et secondes
     Df = DGradE() # Jacobien du Gradient de E
     f = gradE() # Gradient de E
-    l1 = [Df[0][0], Df[0][1], -f[0]] # Ligne 1 Système de Cramer (ligne 120)
-    l2 = [Df[1][0], Df[1][1], -f[1]] # Ligne 2
+    l1 = [Df[0][0], Df[0][1], -f[0]] # Ligne 1 Système de Cramer
+    l2 = [Df[1][0], Df[1][1], -f[1]] # Ligne 2 Système de Cramer
     res=cramer(l1, l2) # Résolution du système de Cramer
     newP1.x = P1.x + res[0] # X(k+1) = Z + X(k)
     newP1.y = P1.y + res[1]
-    
     
     # Mise à jour du graphique
     if (graph==True):
@@ -120,15 +110,15 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
             maxY=newP1.y
         xs.append(newP1.x)
         ys.append(newP1.y)
-        zs.append(Energie(newP1,P2,P3,P4,P5,pond,l,e,a))
-        annotate3D(ax, s=str(i), xyz=(newP1.x, newP1.y, Energie(newP1,P2,P3,P4,P5,pond,l,e,a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')    
-    
-    
-    
-    if (i==0): # Au moins un tour d'optimisation
-        return optimisation(newP1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a, graph=graph, i=i+1)
+        zs.append(Energie(newP1, P2, P3, P4, P5, pond, l, e, a))
+        point = (newP1.x, newP1.y, Energie(newP1, P2, P3, P4, P5, pond, l, e, a))
+        annot.append(point)
+
+    # Appel récursif ou fin de la méthode
+    if (i==0):
+        return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1)
     else:
-        newE = Energie(newP1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a)
+        newE = Energie(newP1, P2, P3, P4, P5, pond, l, e, a)
         changement = newE - oldE
 #        if (changement > 0):
 #            # La nouvelle énergie est plus grande que l'ancienne : on a déterioré la situation
@@ -138,12 +128,12 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
         if (abs(changement) < epsilon):
 #            print("Fini après", i, "optimisations ! Energie finale : ", newE)
             if (graph==True):
-                # recalibrage de l'échelle
+                # Recalibrage de l'échelle
                 minX=minX-(maxX-minX)
                 maxX=maxX+(maxX-minX)
                 minY=minY-(maxY-minY)
                 maxY=maxY+(maxY-minY)
-                # affichage de l'énergie sur une grille
+                # Affichage de l'énergie sur une grille
                 X=[]
                 Y=[]
                 Z=[]
@@ -163,18 +153,16 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
                         X.append(x)
                         Y.append(y)
                         Z.append(z)
-                print(xs)
-                print(ys)
-                print(zs)
-                ax.scatter(xs, ys, zs, c='r', marker='o')
-                ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1)
-                plt.show()
+                affichage(xs,ys,zs,X,Y,Z)
             return newP1
         else:
-            return optimisation(newP1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a, graph=graph, i=i+1)
+            return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1)
 
 #####################################################################
-#                     FONCTIONS ANNEXES
+#                                                                   #
+#                     FONCTIONS ANNEXES                             #
+#                                                                   #
+#####################################################################
 
 def diff(A,B):
     """
@@ -242,7 +230,8 @@ def calculerDerivees(P1, P2, P3, P4, P5, pond, l, e, a):
     derivees[1][1] = 0
     derivees[1][2] = 0
     
-    if (pond[0] != 0): # Energie des longueurs
+    # -------- Energie des longueurs ----------
+    if (pond[0] != 0): 
         
         # dE/dx
         derivees[0][0]= (P1.x-P2.x)*((P1.x-P2.x)**2+(P1.y-P2.y)**2+(P1.z-P2.z)**2-l**2)
@@ -273,8 +262,9 @@ def calculerDerivees(P1, P2, P3, P4, P5, pond, l, e, a):
         derivees[1][2]+= (P1.x-P3.x)*(P1.y-P3.y)
         derivees[1][2]+= (P1.x-P4.x)*(P1.y-P4.y)
         derivees[1][2]*= 8*pond[0]
-    
-    if (pond[2] != 0): # Energie du point miroir 
+        
+    # -------- Energie du point miroir ----------
+    if (pond[2] != 0):  
         d = P1.distance(P5)**2 - e**2
         # dérivées ordre 1
         derivees[0][0]+= 4*pond[2]* (P1.x-P5.x)*d
@@ -284,7 +274,8 @@ def calculerDerivees(P1, P2, P3, P4, P5, pond, l, e, a):
         derivees[1][1]+= 4*pond[2]* (2*(P1.y - P5.y)**2 + d)
         derivees[1][2]+= 8*pond[2]* (P1.x-P5.x)*(P1.y-P5.y)
     
-    if (pond[1] != 0): # Energie des angles
+    # -------- Energie des angles ----------
+    if (pond[1] != 0):
         
         S2 = sqrt((P2.x-P1.x)**2+(P2.y-P1.y)**2+(P2.z-P1.z)**2)
         S3 = sqrt((P3.x-P1.x)**2+(P3.y-P1.y)**2+(P3.z-P1.z)**2)
@@ -436,3 +427,27 @@ def module(E):
     """
     return sqrt(E[0]**2+E[1]**2)
     
+
+#####################################################################
+#                                                                   #
+#            VARIABLES ET FONCTIONS POUR LE GRAPHIQUE               #
+#                                                                   #
+#####################################################################
+
+minX=0
+maxX=0
+minY=0
+maxY=0
+xs=[]
+ys=[]
+zs=[]
+annot=[]
+
+def affichage(xs,ys,zs,X,Y,Z):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(xs, ys, zs, c='r', marker='o')
+    ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1)
+    for i in range(0,len(annot)):
+        annotate3D(ax, s=str(i), xyz=annot[i], fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')
+    plt.show()

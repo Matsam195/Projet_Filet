@@ -40,15 +40,28 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable2(mailleCour, L, E, angle, ponderations) and nbOpti < 50):
+    while (not estStable2(mailleCour, L, E, angle, ponderations) and nbOpti < 10):
         nbOpti += 1
-        #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
+        #Optimisation des bords
+#         for i in [0, mailleCour.n-1]:
+#             for j in range(0, mailleCour.m):
+#                 v = mailleCour.getVoisins(i,j)
+#                 p = mailleCour.get(i,j)
+#                 print(i + j*(mailleCour.n))
+#                 mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
+#         for j in [0, mailleCour.m-1]:
+#             for i in range(0, mailleCour.n):  
+#                 v = mailleCour.getVoisins(i,j)
+#                 p = mailleCour.get(i,j)
+#                 mailleSuiv.pts[i + j*(mailleCour.n)] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
+                
+        #optimisation des points intérieurs
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
 #                print("Point de coordonnées ", i, j)
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], L, E, angle, ponderations)
+                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
 #    mailleCour.afficher()
