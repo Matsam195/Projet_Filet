@@ -19,8 +19,8 @@ from mpl_toolkits.mplot3d import Axes3D
 L = 0.5
 
 norm = mpl.colors.Normalize(vmin=L, vmax=L*1.5)
-cmapPlus = plt.cm.inferno
-cmapMoins = plt.cm.cubehelix_r
+#cmapPlus = plt.cm.inferno
+#cmapMoins = plt.cm.cubehelix_r
 
 def make_colormap(seq):
     """Return a LinearSegmentedColormap
@@ -89,7 +89,7 @@ class ListePoints:
                 P = self.get(i,j)
                 for v in self.getVoisinsAffichage(i, j):
                     if v.x == -1:
-                        print("voisin chelou de ",i,j)
+                        print("voisin bizarre de ",i,j)
                     x = [P.x, v.x]
                     y = [P.y, v.y]
                     z = [P.z, v.z]
@@ -107,7 +107,7 @@ class ListePoints:
     def get(self, i, j):
         assert((i >= 0) and (j >= 0))
         assert ((i <= self.n-1) and (j <= self.m-1))
-        # élimination des points fantomes :        
+        # élimination des points fantomes s'ils existent:        
         if (i == self.n and j == 0) :
             if self.mailleN % 2 == 0:
                 assert isinstance(self.pts[0],Point) 
@@ -122,6 +122,13 @@ class ListePoints:
 
     # les voisins sont donnés par ordre de j croissant
     def getVoisins(self, i, j) :
+        """renvoie les voisins d'un point
+        (principalement utilisées pour l'optimisation)
+        i : ligne du point
+        j : colonne 
+        renvoie une liste de 4 voisins :
+            les trois premiers sont les voisins directs triés par colonne croissante
+            le dernier est le voisin non relié (symétrie horizontale)"""
         assert ((i > 0) and (j > 0))
         assert ((i < self.n-1) and (j < self.m-1))
         listeVoisins = []
@@ -140,9 +147,16 @@ class ListePoints:
         
         
     def getVoisinsAffichage(self, i, j) :
+        """Cette fonction renvoie les voisins de chaque point pour les afficher
+            à la différence de la fonction ci dessus, elle renvoie les voisins 
+            liés au sommet et gère le cas complexe des bords 
+            i : ligne
+            j : colonne
+            renvoie une liste de 2 à 3 points voisins (reliés au point entré)"""
         assert ((i >= 0) and (j >= 0))
         assert ((i <= self.n-1) and (j <= self.m-1))
         listeVoisins = []
+        # Cas classique d'un point au centre de la maille
         if (i>0 and j > 0 and i < self.n -1 and j < self.m -1):            
             listeVoisins.append(self.get(i, j-1))
             if (i % 2) == (j % 2): # flèche vers le bas 
@@ -151,6 +165,7 @@ class ListePoints:
                 listeVoisins.append(self.get(i-1, j))
             listeVoisins.append(self.get(i, j+1))        
 
+        # Gestion de tous les cas de bord
         elif (i==0 and j >0 and j < self.m -1):
             listeVoisins.append(self.get(i, j-1))
             if (i % 2) == (j % 2): # flèche vers le bas 
@@ -179,8 +194,7 @@ class ListePoints:
                 listeVoisins.append(self.get(i-1, j))
             if (self.get(i,j+1).y != -1):    
                 listeVoisins.append(self.get(i, j+1))
-            
-
+                
         return listeVoisins
 
               
@@ -199,10 +213,17 @@ class ListePoints:
     
         
 
-    """ Initialisation à partir d'une maille
-        n et m sont calculés à partir de cette maille pour plus de clarté    
-    """ 
-    def __init__(self, maille):
+ 
+    def __init__(self, maille):    
+        """ Initialisation d'une liste de points à partir d'une maille
+            une liste de points contient :
+            - n points en hauteur
+            - m points en largeur
+            n et m sont calculés à partir de la maille en entrée pour plus de clarté
+            si des points sont manquants aux extremités, on ajoute des points "fantômes"
+            de coordonnées (-1,-1,0), il faudra les considérer dans les fonctions de
+            plus haut niveau
+        """
         self.n = maille.n + 1 # n le nombre de points en hauteur
         self.mailleN = maille.n
         self.m = maille.m * 2 + 2 # m le nombre de points en largeur 
@@ -216,7 +237,6 @@ class ListePoints:
         
         # on trace les deux premières colonnes :
         for i in range(0,maille.n,2):
-            print(i)
             liste.append(maille.get(i,0).so)
             liste.append(maille.get(i,0).no)
             nb_pts = nb_pts + 2        
@@ -286,8 +306,6 @@ class ListePoints:
                     liste.append(maille.get(maille.n-1,j).nm)
                     nb_pts = nb_pts + 1
                 # ajout du point de la première ligne
-            #    liste.append(maille.get(0,j).sm)
-                    
                 if maille.m > j +1: 
                     liste.append(maille.get(0,j+1).sm)
                     nb_pts = nb_pts +1
@@ -300,7 +318,6 @@ class ListePoints:
                     liste.append(maille.get(i,j).ne)
                     nb_pts = nb_pts + 2
 
-            
                 if not pair :
                     if maille.m > j + 1:
                         liste.append(maille.get(maille.n-1, j+1).nm)
@@ -313,7 +330,5 @@ class ListePoints:
                 
         if not pair:
             liste.append(fantome)
-            
-        #print(nb_pts)
             
         self.pts = liste
