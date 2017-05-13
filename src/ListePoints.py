@@ -189,7 +189,8 @@ class ListePoints:
                 listeVoisins.append(self.get(i-1, j))
         
         elif (i==self.n-1 and j >0 and j < self.m -1): 
-            listeVoisins.append(self.get(i, j-1))
+            if (self.get(i,j-1).x != -1):
+                listeVoisins.append(self.get(i, j-1))
             if not((i % 2) == (j % 2)): # flèche vers le bas 
                 listeVoisins.append(self.get(i-1, j))
             if (self.get(i,j+1).y != -1):    
