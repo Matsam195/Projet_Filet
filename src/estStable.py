@@ -10,7 +10,7 @@ from optimisation import *
 
 # Conditions de stabilité
 lastEnergie = 0
-seuil = 0.01
+#seuil = 0.01
 
 def angleMax(maille):
     maximum = 0
@@ -50,7 +50,11 @@ def energieMaille(maille, longueur, e, angle, ponderations):
             somme += Energie(point, voisins[0], voisins[1], voisins[2], voisins[3], ponderations, longueur, e, angle)
     return somme
 
-def energieAssezFaible(point, voisins, longueur, e, angle, ponderations):
+def energieAssezFaible(point, voisins, longueur, e, angle, ponderations, dz='novalue'):
+    if (dz=='novalue'):
+        seuil=0.01
+    else:
+        seuil =(dz*5.0/100.0)**4
     return(Energie(point, voisins[0], voisins[1], voisins[2], voisins[3], longueur, e, angle, ponderations) < seuil)
 
 
@@ -69,12 +73,16 @@ def estStable1(maille, longueur, e, angle, ponderations):
                 return False
     return True
 
-def estStable2(maille, longueur, e, angle, ponderations):
+def estStable2(maille, longueur, e, angle, ponderations, dz='novalue'):
     """
     Estime si la maille est stable, selon les critères d'énergie longueur, e, angle et ponderations (cf. help(Energie)).
     Méthode 2 : si l'optimisation a fait varier l'énergie totale de la maille d'au moins seuil, la maille n'est pas stable.
                 si la variation de l'énergie totale de la maille est inférieure au seuil, la maille est stable.
     """
+    if (dz=='novalue'):
+        seuil=0.01
+    else:
+        seuil =(dz*5.0/100.0)**4*maille.n*maille.m
     global lastEnergie
     energie = energieMaille(maille, longueur, e, angle, ponderations)
     stable = abs(energie-lastEnergie) < seuil

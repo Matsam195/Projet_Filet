@@ -16,9 +16,6 @@ from annotation3D import annotate3D
 #                                                                   #
 #####################################################################
 
-# Marge d'écart autorisée pour considérer optimisation finie
-epsilon = 0.1 
-
 # Nombre d'itérations maximales autorisées
 nbIteMax = 50
 
@@ -28,7 +25,7 @@ nbIteMax = 50
 #                                                                   #
 #####################################################################
 
-def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, graph=False, i=0):
+def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, graph=False, i=0, dz='novalue'):
     """
     Calcule la position optimale du point P1 par rapport à ses points
     voisins P2, P3, P4, lorsque la distance désirée entre ces points vaut l
@@ -58,8 +55,11 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
         assert isinstance(P5, Point)    
 
     # Paramètres généraux
-    global epsilon
     global nbIteMax
+    if (dz=='novalue'):
+        epsilon=0.1
+    else:
+        epsilon = (dz*5.0/100.0)**4
     
     # Paramètres et initialisation pour le graphique
     global xs
@@ -116,7 +116,7 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
 
     # Appel récursif ou fin de la méthode
     if (i==0):
-        return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1)
+        return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1, dz)
     else:
         newE = Energie(newP1, P2, P3, P4, P5, pond, l, e, a)
         changement = newE - oldE
@@ -156,7 +156,7 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
                 affichage(xs,ys,zs,X,Y,Z)
             return newP1
         else:
-            return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1)
+            return optimisation(newP1, P2, P3, P4, P5, pond, l, e, a, graph, i+1, dz)
 
 #####################################################################
 #                                                                   #

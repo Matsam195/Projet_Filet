@@ -31,6 +31,7 @@ mailleSuiv = liste_pts
 N = 10
 x = []
 y = []
+dz = valeurdz(SN,N)
 
 ponderations = [1,0,0]
 E = L - 2*L*cos(angle)
@@ -41,7 +42,7 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable2(mailleCour, L, E, angle, ponderations) and nbOpti < 10):
+    while (not estStable2(mailleCour, L, E, angle, ponderations, dz=dz) and nbOpti < 10):
         nbOpti += 1
         #Optimisation des bords
         for i in [0, mailleCour.n-1]:
@@ -49,13 +50,13 @@ for k in range(1, N+1):
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
                 if (p.x != -1):
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
+                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
         for j in [0, mailleCour.m-1]:
             for i in range(0, mailleCour.n):  
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
                 if p.x != -1:
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
+                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
                 
         #optimisation des points intérieurs
         for i in range(1, mailleCour.n-1):
@@ -64,7 +65,7 @@ for k in range(1, N+1):
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
                 if p.x != -1:
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
+                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
         mailleCour = mailleSuiv
     print("Tour numero " + str(k) + " fini")
 #    mailleCour.afficher()

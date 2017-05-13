@@ -29,3 +29,18 @@ def SN(u,v):
     
 # def S_lat(u,v):
 #     return Point(u,v, cos(v))
+
+def valeurdz(SN, N):
+    """
+    Renvoie le dz max entre 2 surfaces subissant une interpolation de N surfaces
+    """ 
+    maxX=10.0 #domaine dans le x entre 0 et maxX
+    maxY=10.0 #domaine dans le y entre 0 et maxY
+    k = 100 #nb d'interpolation de la grille de recherche
+    max = 0.0
+    for i in range(1,k):
+        for j in range(1,k):
+            res=SN(float(i)*maxX/float(k),float(j)*maxY/float(k)).z
+            if (res > max):
+                max = res
+    return (float(max)/float(N))
