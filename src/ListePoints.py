@@ -129,20 +129,99 @@ class ListePoints:
         renvoie une liste de 4 voisins :
             les trois premiers sont les voisins directs triés par colonne croissante
             le dernier est le voisin non relié (symétrie horizontale)"""
-        assert ((i > 0) and (j > 0))
-        assert ((i < self.n-1) and (j < self.m-1))
+        assert ((i >= 0) and (j >= 0))
+        assert ((i <= self.n-1) and (j <= self.m-1))
+        current = self.get(i,j)
         listeVoisins = []
-        listeVoisins.append(self.get(i, j-1))
-        if (i % 2) == (j % 2): # flèche vers le bas 
-            listeVoisins.append(self.get(i+1,j))
-        else :
-            listeVoisins.append(self.get(i-1, j))
-        listeVoisins.append(self.get(i, j+1))
-        # Renvoie le point mirroir :
-        if (i % 2) == (j % 2): # flèche vers le bas 
-            listeVoisins.append(self.get(i-1,j))
-        else :
-            listeVoisins.append(self.get(i+1, j))
+        if (not self.estBord(self.get(i,j))):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1,j))
+            else :
+                listeVoisins.append(self.get(i+1, j))
+        
+        # Gestion de tous les cas de bord
+        elif (i==0 and j >0 and j < self.m -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                #n'annule que l'énergie avec longueurs
+                listeVoisins.append(Point(current.x, current.y-L, current.z))
+            if self.get(i,j+1)!=-1 :     
+                listeVoisins.append(self.get(i, j+1))
+            else:
+                #point fantôme. n'annule que l'énergie avec les longueurs
+                listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                #n'annule que l'énergie avec longueurs
+                listeVoisins.append(Point(current.x, current.y-L, current.z))
+            else :
+                listeVoisins.append(self.get(i+1,j))
+
+        elif (j==0 and i >0 and i < self.n -1):
+            #virtuel
+            listeVoisins.append(Point(current.x-L, current.y, current.z))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i+1,j))
+            else :
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(self.get(i, j+1))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1,j))
+            else :
+                listeVoisins.append(self.get(i+1, j))
+        
+        elif (j==self.m-1 and i >0 and i < self.n -1):
+            listeVoisins.append(self.get(i, j-1))
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                if (self.get(i+1,j).x != -1):
+                    listeVoisins.append(self.get(i+1,j))
+                else:
+                    #Point fantôme
+                    listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else:
+                listeVoisins.append(self.get(i-1, j))
+            listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if (i % 2) == (j % 2): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1, j))
+            else: 
+                if (self.get(i+1,j).x != -1):
+                    listeVoisins.append(self.get(i+1,j))
+                else:
+                    #Point fantôme
+                    listeVoisins.append(Point(current.x, current.y+L, current.z))   
+        
+        elif (i==self.n-1 and j >0 and j < self.m -1): 
+            if (self.get(i,j-1).x != -1):
+                listeVoisins.append(self.get(i, j-1))
+            else:
+                listeVoisins.append(Point(current.x -L, current.y, current.z))
+            
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+            else:
+                listeVoisins.append(self.get(i-1, j))
+
+            if (self.get(i,j+1).y != -1):    
+                listeVoisins.append(self.get(i, j+1))
+            else:
+                listeVoisins.append(Point(current.x+L, current.y, current.z))
+            # Renvoie le point mirroir :
+            if ((i % 2) == (j % 2)): # flèche vers le bas 
+                listeVoisins.append(self.get(i-1, j))
+            else:
+                listeVoisins.append(Point(current.x, current.y+L, current.z))
+        
         return listeVoisins
         
         
