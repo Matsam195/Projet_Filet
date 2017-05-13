@@ -29,8 +29,17 @@ maxY=0
 xs=[]
 ys=[]
 zs=[]
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d') 
+annot=[]
+
+def affichage(xs,ys,zs,X,Y,Z):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(xs, ys, zs, c='r', marker='o')
+    ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1)
+    for i in range(0,len(annot)):
+        annotate3D(ax, s=str(i), xyz=annot[i], fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')
+    
+    plt.show()
 
 #####################################################################
 #                     FONCTION PRINCIPALE
@@ -75,11 +84,10 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
     global maxX
     global minY
     global maxY
-    global ax
-    global fig
+    global annot
+    
     # initialisation pour le graphique
     if (graph==True and i==0):
-        print("allo1")
         minX=P1.x
         maxX=P1.x
         minY=P1.y
@@ -87,7 +95,9 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
         xs.append(P1.x)
         ys.append(P1.y)
         zs.append(Energie(P1, P2, P3, P4, P5, pond, l, e, a))
-        annotate3D(ax, s='P1', xyz=(P1.x, P1.y, Energie(P1,P2,P3,P4,P5,pond=pond, l=l, e=e, a=a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')
+        point = (P1.x, P1.y, Energie(P1,P2,P3,P4,P5,pond,l,e,a))
+        annot.append(point)
+        #annotate3D(ax, s='P1', xyz=(P1.x, P1.y, Energie(P1,P2,P3,P4,P5,pond=pond, l=l, e=e, a=a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')
     
     
     # on teste qu'on n'a pas fait trop d'appels
@@ -121,7 +131,9 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
         xs.append(newP1.x)
         ys.append(newP1.y)
         zs.append(Energie(newP1,P2,P3,P4,P5,pond,l,e,a))
-        annotate3D(ax, s=str(i), xyz=(newP1.x, newP1.y, Energie(newP1,P2,P3,P4,P5,pond,l,e,a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')    
+        point = (newP1.x, newP1.y, Energie(newP1,P2,P3,P4,P5,pond,l,e,a))
+        annot.append(point)
+        #annotate3D(ax, s=str(i), xyz=(newP1.x, newP1.y, Energie(newP1,P2,P3,P4,P5,pond,l,e,a)), fontsize=10, xytext=(-3,3), textcoords='offset points', ha='right',va='bottom')    
     
     
     
@@ -163,12 +175,8 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
                         X.append(x)
                         Y.append(y)
                         Z.append(z)
-                print(xs)
-                print(ys)
-                print(zs)
-                ax.scatter(xs, ys, zs, c='r', marker='o')
-                ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1)
-                plt.show()
+                # plot image
+                affichage(xs,ys,zs,X,Y,Z)
             return newP1
         else:
             return optimisation(newP1, P2, P3, P4, P5, pond=pond, l=l, e=e, a=a, graph=graph, i=i+1)
