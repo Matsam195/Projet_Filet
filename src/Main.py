@@ -19,7 +19,7 @@ from optimisation import *
 L = 0.5
 angle = pi/2.5
 # On génère un nombre fixe de papillons 
-maille = Maille(24,10)
+maille = Maille(17,8)
 # Création de l'origine - 1er papillon en (0,0)
 # Garder 0,0,0 est une bonne idée car il existe des "points fantomes" aux bords
 # qui risquent de poser problème si la maille est centrée en 0
@@ -88,7 +88,7 @@ N = 10
 x = []
 y = []
 
-ponderations = [1,0,0]
+ponderations = [1,0.5,0]
 E = L - 2*L*cos(angle)
 
 for k in range(1, N+1):
@@ -97,7 +97,9 @@ for k in range(1, N+1):
     mailleCour.projection(St)
     stable = False
     nbOpti = 0
-    while (not estStable(mailleCour, L, E, angle, ponderations) and nbOpti < 25):
+    while (not estStable(mailleCour, L, E, angle, ponderations) and nbOpti < 50):
+        print("Angle max :", angleMax(mailleCour))
+        print("Energie de la maille :", energieMaille(mailleCour, L, E, angle, ponderations))
         nbOpti += 1
         #print("########################### N'est pas stable. Optimisation", nbOpti, "de l'interpolation", k, "... #############################")
         for i in range(1, mailleCour.n-1):
