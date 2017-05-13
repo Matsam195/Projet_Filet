@@ -44,18 +44,18 @@ for k in range(1, N+1):
     while (not estStable2(mailleCour, L, E, angle, ponderations) and nbOpti < 10):
         nbOpti += 1
         #Optimisation des bords
-#         for i in [0, mailleCour.n-1]:
-#             for j in range(0, mailleCour.m):
-#                 v = mailleCour.getVoisins(i,j)
-#                 p = mailleCour.get(i,j)
-#                 if (p.x != -1):
-#                     mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
-#         for j in [0, mailleCour.m-1]:
-#             for i in range(0, mailleCour.n):  
-#                 v = mailleCour.getVoisins(i,j)
-#                 p = mailleCour.get(i,j)
-#                 if p.x != -1:
-#                     mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
+        for i in [0, mailleCour.n-1]:
+            for j in range(0, mailleCour.m):
+                v = mailleCour.getVoisins(i,j)
+                p = mailleCour.get(i,j)
+                if (p.x != -1):
+                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
+        for j in [0, mailleCour.m-1]:
+            for i in range(0, mailleCour.n):  
+                v = mailleCour.getVoisins(i,j)
+                p = mailleCour.get(i,j)
+                if p.x != -1:
+                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle)
                 
         #optimisation des points intérieurs
         for i in range(1, mailleCour.n-1):
