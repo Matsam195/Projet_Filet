@@ -26,7 +26,7 @@ P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
 
 l=1
 a = pi/3
-ecartx = 0.001
+ecartx = 0.02
 ecarty = 0.9
 ponderations = [1, 0, 0]
 
@@ -49,16 +49,16 @@ S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
 a1 = acos(N1/(S2*S3))
 a2 = acos(N2/(S3*S4))
 
-#print("")
-#print("Point initial :")
-#print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
-#print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
-#print("")
+print("")
+print("Point initial :")
+print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
+print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
+print("")
 
-newP1=optimisation(P1,P2,P3,P4, l=l, a=a, pond=ponderations, graph=True)
+newP1=optimisation(P1,P2,P3,P4, l=l, a=a, pond=ponderations, graph=False)
 
-#plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
-#plt.plot([P1.x], [P1.y], 'ro')
+plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
+plt.plot([P1.x], [P1.y], 'ro')
 
 P1 = newP1
 
@@ -70,21 +70,21 @@ S4 = sqrt((P4.x-P1.x)**2+(P4.y-P1.y)**2+(P4.z-P1.z)**2)
 a1 = acos(N1/(S2*S3))
 a2 = acos(N2/(S3*S4))
 
-#print("")
-#print("Point final :")
-#print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
-#print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
-#print("")
+print("")
+print("Point final :")
+print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
+print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
+print("")
 
-#plt.plot([newP1.x], [newP1.y], 'yo')
-#plt.axis('equal')
-#plt.show()
+plt.plot([newP1.x], [newP1.y], 'yo')
+plt.axis('equal')
+plt.show()
 
-#print("")
-#print("Point attendu :")
-#print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
-#print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
-#print("")
+print("")
+print("Point attendu :")
+print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
+print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
+print("")
 
 # ---------------------------------------------------------------------
 # Exemple moins simple
@@ -136,7 +136,7 @@ a2 = acos(N2/(S3*S4))
     
      
 ###############################################################################
-# Exemple pour tester l'ajout du point mirroir dans le calcul de l'énergie
+# Exemple pour tester l'ajout du point miroir dans le calcul de l'énergie
 ###############################################################################
 #l=1.0
 #a = pi/2.5
