@@ -20,7 +20,7 @@ origine = Point(0, 0, 0)
 N = 10
 dz = valeurdz(SN, N)
 bordsLibres = False
-ponderations = [1,0,0]
+ponderations = [1,0,1]
 E = L - 2*L*cos(angle)
 nbOptiMax = 1000
 ###

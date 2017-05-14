@@ -17,29 +17,23 @@ from Point import *
 # bleus: voisins
 # rouge: point initial
 # jaune: point optimisé
-    
-P1=Point(1.0/sqrt(2.0)+0.3, 1.0/sqrt(2.0)+0.3, 0.0)
-P1=Point(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0)
-P2=Point(0.0, 0.0, 0.0)
-P3=Point(2.0/sqrt(2.0), 0.0, 0.0)
-P4=Point(1.0/sqrt(2.0), 1.0+1.0/sqrt(2.0), 0.0)
 
 l=1
 a = pi/3
-ecartx = 0.02
-ecarty = 0.9
+ecartx = 0.1
+ecarty = 0.3
 ponderations = [1, 0, 0]
 
 # TRIANGLE EQUILATERAL
-P1=Point(0.5+0.2, sqrt(3)/6+0.3, 0.0)
-P2=Point(0.0, 0.0, 0.0)
-P3=Point(0.5, sqrt(3)/2, 0.0)
-P4=Point(1.0, 0.0, 0.0)
+#P1=Point(0.5+ecartx, sqrt(3)/6+ecarty, 0.0)
+#P2=Point(0.0, 0.0, 0.0)
+#P3=Point(0.5, sqrt(3)/2, 0.0)
+#P4=Point(1.0, 0.0, 0.0)
 # CONFIGURATION PAPILLON
-#P1=Point(sin(a)+ecartx, 0+ecarty, 0)
-#P2=Point(0, cos(a), 0)
-#P3=Point(sin(a), 1, 0)
-#P4=Point(2*sin(a), cos(a), 0)
+P1=Point(sin(a)+ecartx, 0+ecarty, 0)
+P2=Point(0, cos(a), 0)
+P3=Point(sin(a), 1, 0)
+P4=Point(2*sin(a), cos(a), 0)
 
 N1 = (P3.x-P1.x)*(P2.x-P1.x)+(P3.y-P1.y)*(P2.y-P1.y)+(P3.z-P1.z)*(P2.z-P1.z)
 N2 = (P4.x-P1.x)*(P3.x-P1.x)+(P4.y-P1.y)*(P3.y-P1.y)+(P4.z-P1.z)*(P3.z-P1.z)
@@ -55,10 +49,10 @@ print("a1 :", a1-a, "| a2 :", a2-a, "| 2pi/3 :", a)
 print("L1 :", P1.distance(P2)-l, "| L2 :", P1.distance(P3)-l, "| L3 :", P1.distance(P4)-l, "| L :", l)
 print("")
 
-newP1=optimisation(P1,P2,P3,P4, l=l, a=a, pond=ponderations, graph=False)
+newP1=optimisation(P1,P2,P3,P4, l=l, a=a, pond=ponderations, graph=True)
 
-plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
-plt.plot([P1.x], [P1.y], 'ro')
+#plt.plot([P2.x, P3.x, P4.x], [P2.y, P3.y, P4.y], 'bo')
+#plt.plot([P1.x], [P1.y], 'ro')
 
 P1 = newP1
 
@@ -76,15 +70,18 @@ print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
 print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
 print("")
 
-plt.plot([newP1.x], [newP1.y], 'yo')
-plt.axis('equal')
-plt.show()
-
 print("")
 print("Point attendu :")
 print("a1-a :", a1-a, "| a2-a :", a2-a, "| 2pi/3 :", a)
 print("L1-L :", P1.distance(P2)-l, "| L2-L :", P1.distance(P3)-l, "| L3-L :", P1.distance(P4)-l, "| L :", l)
 print("")
+
+#plt.plot([0.5], [sqrt(3)/6], 'go')
+#plt.plot([sin(a)], [0], 'go')
+#plt.axis('equal')
+#plt.show()
+
+#plt.plot([newP1.x], [newP1.y], 'yo')
 
 # ---------------------------------------------------------------------
 # Exemple moins simple
