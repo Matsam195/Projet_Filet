@@ -16,7 +16,6 @@ from optimisation import *
 ### Paramètres de la simulation ###
 L = 0.5
 angle = pi/2.5
-origine = Point(0, 0, 0)
 N = 10
 dz = valeurdz(SN, N)
 bordsLibres = False
@@ -25,7 +24,7 @@ E = L - 2*L*cos(angle)
 nbOptiMax = 1000
 ###
 
-liste_pts = ListePoints(19, 8, L, angle, origine)
+liste_pts = ListePoints(17, 8, L, angle)
 mailleCour = liste_pts
 mailleSuiv = liste_pts
 x = []
@@ -58,7 +57,7 @@ for k in range(1, N+1):
             for j in range(1, mailleCour.m-1):
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
+                #mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
         mailleCour = mailleSuiv
     if (nbOpti == nbOptiMax):
         print("Nombre d'optimisation maximal atteint. Passage à l'interpolation suivante.")
