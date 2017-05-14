@@ -13,61 +13,56 @@ from estStable import *
 from optimisation import *
 
 
-
+### Paramètres de la simulation ###
 L = 0.5
 angle = pi/2.5
 origine = Point(0, 0, 0)
-liste_pts = ListePoints(25, 15, L, angle, origine)
-#liste_pts.afficher()
-#plt.show()
-
-######################################################################################################################
-
-mailleCour = liste_pts
-mailleSuiv = liste_pts
-# S0 fonction définie dans interpolation
-# SN fonction définie dans interpolation
-
 N = 10
-x = []
-y = []
-dz = valeurdz(SN,N)
-
+dz = valeurdz(SN, N)
+bordsLibres = False
 ponderations = [1,0,0]
 E = L - 2*L*cos(angle)
+nbOptiMax = 1000
+###
+
+liste_pts = ListePoints(19, 8, L, angle, origine)
+mailleCour = liste_pts
+mailleSuiv = liste_pts
+x = []
+y = []
 
 for k in range(1, N+1):
     t = k/N
     St = interpolation(S0, SN, t)
     mailleCour.projection(St)
     nbOpti = 0
-    while (not estStable2(mailleCour, L, E, angle, ponderations, dz=dz) and nbOpti < 10):
+    while (not estStable2(mailleCour, L, E, angle, ponderations, dz=dz) and nbOpti < nbOptiMax):
         nbOpti += 1
         #Optimisation des bords
-        for i in [0, mailleCour.n-1]:
-            for j in range(0, mailleCour.m):
-                v = mailleCour.getVoisins(i,j)
-                p = mailleCour.get(i,j)
-                if (p.x != -1):
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
-        for j in [0, mailleCour.m-1]:
-            for i in range(0, mailleCour.n):  
-                v = mailleCour.getVoisins(i,j)
-                p = mailleCour.get(i,j)
-                if p.x != -1:
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
+        if (bordsLibres):
+            for i in [0, mailleCour.n-1]:
+                for j in range(0, mailleCour.m):
+                    v = mailleCour.getVoisins(i,j)
+                    p = mailleCour.get(i,j)
+                    if (p.x != -1):
+                        mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
+            for j in [0, mailleCour.m-1]:
+                for i in range(0, mailleCour.n):  
+                    v = mailleCour.getVoisins(i,j)
+                    p = mailleCour.get(i,j)
+                    if p.x != -1:
+                        mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
                 
         #optimisation des points intérieurs
         for i in range(1, mailleCour.n-1):
             for j in range(1, mailleCour.m-1):
                 v = mailleCour.getVoisins(i,j)
                 p = mailleCour.get(i,j)
-                if p.x != -1:
-                    mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
+                mailleSuiv.pts[i*mailleCour.m + j] = optimisation(p, v[0], v[1], v[2], v[3], ponderations, L, E, angle, dz=dz)
         mailleCour = mailleSuiv
-    print("Tour numero " + str(k) + " fini")
-    if (nbOpti == 50):
-        print("Nombre d'optimisation maximal atteint. Il est très probable que la maille simulation ait échoué.")
+    if (nbOpti == nbOptiMax):
+        print("Nombre d'optimisation maximal atteint. Passage à l'interpolation suivante.")
+    print("Interpolation", str(k), "finie au bout de", nbOpti, "optimisations")
 #    mailleCour.afficher()
 
 mailleCour.afficher()

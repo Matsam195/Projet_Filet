@@ -25,7 +25,7 @@ nbIteMax = 50
 #                                                                   #
 #####################################################################
 
-def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, graph=False, i=0, dz='novalue'):
+def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, graph=False, i=0, dz=0):
     """
     Calcule la position optimale du point P1 par rapport à ses points
     voisins P2, P3, P4, lorsque la distance désirée entre ces points vaut l
@@ -56,7 +56,7 @@ def optimisation(P1, P2, P3, P4, P5='no value', pond=[1,0.5,1], l=1, e=1, a=1, g
 
     # Paramètres généraux
     global nbIteMax
-    if (dz=='novalue'):
+    if (dz==0):
         epsilon=0.1
     else:
         epsilon = (dz*5.0/100.0)**4

@@ -73,13 +73,13 @@ def estStable1(maille, longueur, e, angle, ponderations):
                 return False
     return True
 
-def estStable2(maille, longueur, e, angle, ponderations, dz='novalue'):
+def estStable2(maille, longueur, e, angle, ponderations, dz=0):
     """
     Estime si la maille est stable, selon les critères d'énergie longueur, e, angle et ponderations (cf. help(Energie)).
     Méthode 2 : si l'optimisation a fait varier l'énergie totale de la maille d'au moins seuil, la maille n'est pas stable.
                 si la variation de l'énergie totale de la maille est inférieure au seuil, la maille est stable.
     """
-    if (dz=='novalue'):
+    if (dz == 0):
         seuil=0.01
     else:
         seuil =(dz*5.0/100.0)**4*maille.n*maille.m

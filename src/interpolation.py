@@ -22,9 +22,9 @@ def SN(u,v):
     """
     Surface 
     """
-    amplitude = 6
+    amplitude = 2
     sigma = 1 # Ecart-type
-    mu = [4, 3] # Centrer la Gaussienne
+    mu = [3.5, 3.5] # Centrer la Gaussienne
     return Point(u,v, amplitude/(sigma*sqrt(2*pi)) * exp(-((u-mu[0])**2 + (v-mu[1])**2)/(sigma*sigma*2)))
     
 # def S_lat(u,v):
